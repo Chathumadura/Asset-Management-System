@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Desktop Computer Info</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <div class="container">
+        <h1>Desktop Computer Info</h1>
+        <button id="desktop">Back</button>
+        <div class="filters">
+            <label for="brand-filter">Brand:
+                <select id="brand-filter">
+                    <option value="">All</option>
+                    <option value="Dell">Dell</option>
+                    <option value="HP">HP</option>
+                    <option value="Acer">Acer</option>
+                    <option value="Lenovo">Lenovo</option>
+                    <option value="Centerm">Centerm</option>
+                    <option value="Assembled">Assembled</option>
+                </select>
+            </label>
+            <label for="model-filter">Model:
+                <input type="text" id="model-filter" placeholder="Enter model to filter" />
+            </label>
+            <label for="division-filter">Division:
+                <select id="division-filter">
+                    <option value="">All</option>
+                    <option value="IT">IT</option>
+                    <option value="admin">admin</option>
+                    <option value="Lab">Lab</option>
+                    <option value="Export">Export</option>
+                    <option value="Finance">Finance</option>
+                </select>
+            </label>
+            <label for="year-filter">Year:
+                <input type="text" id="year-filter" placeholder="Enter year to filter" />
+            </label>
+            <button id="createBtn">Create New</button>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Brand </th>
+                        <th>Model No</th>
+                        <th>S/N</th>
+                        <th>PRN</th>
+                        <th>Division</th>
+                        <th>User</th>
+                        <th>Year</th>
+                        <th>CPU/MONITER</th>
+                        <th>RAM Capacity</th>
+                        <th>HDD Capacity</th>
+                        <th>Processor Speed</th>
+                        <th>OS Version</th>
+                        <th>1st Repair Date</th>
+                        <th>2nd Repair Date</th>
+                        <th>3rd Repair Date</th>
+                        <th>4th Repair Date</th>
+                        <th>Actions</th>
+                    </tr>
+                <tbody id="data-body">
+                </tbody>
+            </table>
+        </div>
+    </div>
