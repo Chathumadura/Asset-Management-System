@@ -104,3 +104,40 @@ ipcMain.handle('db-update-desktop', async (event, data) => { // Matches preload.
 });
 
 
+// --- Laptop Users IPC Handlers ---
+// These seem correct and match your laptop.js and preload.js.
+ipcMain.handle('get-laptop-users', async () => {
+    try {
+        return await db.getLaptopUsers(); // Assuming db.getLaptopUsers exists
+    } catch (err) {
+        console.error('Error in get-laptop-users:', err);
+        throw err;
+    }
+});
+
+ipcMain.handle('create-laptop-user', async (event, row) => {
+    try {
+        return await db.createLaptopUser(row);
+    } catch (err) {
+        console.error('Error in create-laptop-user:', err);
+        throw err;
+    }
+});
+
+ipcMain.handle('delete-laptop-user', async (event, sn) => {
+    try {
+        return await db.deleteLaptopUser(sn);
+    } catch (err) {
+        console.error('Error in delete-laptop-user:', err);
+        throw err;
+    }
+});
+
+ipcMain.handle('update-laptop-user', async (event, row) => {
+    try {
+        return await db.updateLaptopUser(row);
+    } catch (err) {
+        console.error('Error in update-laptop-user:', err);
+        throw err;
+    }
+});
