@@ -69,3 +69,220 @@
             </table>
         </div>
     </div>
+
+    <div id="createModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <h2>Create New Desktop Computer</h2>
+            <form id="createForm">
+                <div class="form-section">
+                    <div class="input-row">
+                        <div>
+                            <label>Brand :</label>
+                            <input type="text" name="brand" id="new-brand" required />
+                        </div>
+                        <div>
+                            <label>Model No:</label>
+                            <input type="text" name="model" id="new-model" required />
+                        </div>
+                        <div>
+                            <label>S/N:</label>
+                            <input type="text" name="sn" id="new-sn" required />
+                        </div>
+                        <div>
+                            <label>Division:</label>
+                            <select name="Division" id="new-division" required>
+                                <option value="">Select Division</option>
+                                <option value="IT">IT</option>
+                                <option value="admin">admin</option>
+                                <option value="Lab">Lab</option>
+                                <option value="Export">Export</option>
+                                <option value="Finance">Finance</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>User:</label>
+                            <input type="text" name="User" id="new-user" />
+                        </div>
+                    </div>
+                    <div class="input-row">
+                        <div>
+                            <label>PRN:</label>
+                            <input type="text" name="PRN" id="new-PRN" />
+                        </div>
+                        <div>
+                            <label>Year:</label>
+                            <input type="text" name="YEAR" id="new-year" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-section">
+                    <div class="input-row">
+                        <div>
+                            <label>CPU/MONITER:</label>
+                            <input type="text" name="cpu_moniter" id="new-cpu-moniter" />
+                        </div>
+                        <div>
+                            <label>RAM Capacity:</label>
+                            <input type="text" name="ram_capacity" id="new-ram-capacity" />
+                        </div>
+                        <div>
+                            <label>HDD Capacity:</label>
+                            <input type="text" name="hdd_capacity" id="new-hdd-capacity" />
+                        </div>
+                        <div>
+                            <label>Processor Speed:</label>
+                            <input type="text" name="processor_speed" id="new-processor-speed" />
+                        </div>
+                    </div>
+                    <div class="input-row">
+                        <div>
+                            <label>OS Version:</label>
+                            <input type="text" name="os_version" id="new-os-version" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-section">
+                    <div class="input-row">
+                        <div>
+                            <label>1st Repair Date:</label>
+                            <input type="date" name="repair_date_1" id="new-repair-date-1" />
+                        </div>
+                        <div>
+                            <label>2nd Repair Date:</label>
+                            <input type="date" name="repair_date_2" id="new-repair-date-2" />
+                        </div>
+                        <div>
+                            <label>3rd Repair Date:</label>
+                            <input type="date" name="repair_date_3" id="new-repair-date-3" />
+                        </div>
+                        <div>
+                            <label>4th Repair Date:</label>
+                            <input type="date" name="repair_date_4" id="new-repair-date-4" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="create-btn">Create</button>
+                    <button type="button" class="cancel-btn" id="cancelCreate">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="editModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <h2>Edit Desktop Computer Details</h2>
+            <form id="editForm">
+                <div class="form-section">
+                    <div class="input-row">
+                        <div>
+                            <label>Brand :</label>
+                            <input type="text" name="brand" id="edit-brand" required />
+                        </div>
+                        <div>
+                            <label>Model No:</label>
+                            <input type="text" name="model" id="edit-model" required />
+                        </div>
+                        <div>
+                            <label>S/N:</label>
+                            <input type="text" name="sn" id="edit-sn" readonly />
+                        </div>
+                        <div>
+                            <label>Division:</label>
+                            <select name="Division" id="edit-division" required>
+                                <option value="">Select Division</option>
+                                <option value="IT">IT</option>
+                                <option value="admin">admin</option>
+                                <option value="Lab">Lab</option>
+                                <option value="Export">Export</option>
+                                <option value="Finance">Finance</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>User:</label>
+                            <input type="text" name="User" id="edit-user" />
+                        </div>
+                    </div>
+                    <div class="input-row">
+                        <div>
+                            <label>PRN:</label>
+                            <input type="text" name="PRN" id="edit-PRN" />
+                        </div>
+                        <div>
+                            <label>Year:</label>
+                            <input type="text" name="YEAR" id="edit-year" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-section">
+                    <div class="input-row">
+                        <div>
+                            <label>CPU/MONITER:</label>
+                            <input type="text" name="cpu_moniter" id="edit-cpu-moniter" />
+                        </div>
+                        <div>
+                            <label>RAM Capacity:</label>
+                            <input type="text" name="ram_capacity" id="edit-ram-capacity" />
+                        </div>
+                        <div>
+                            <label>HDD Capacity:</label>
+                            <input type="text" name="hdd_capacity" id="edit-hdd-capacity" />
+                        </div>
+                        <div>
+                            <label>Processor Speed:</label>
+                            <input type="text" name="processor_speed" id="edit-processor-speed" />
+                        </div>
+                    </div>
+                    <div class="input-row">
+                        <div>
+                            <label>OS Version:</label>
+                            <input type="text" name="os_version" id="edit-os-version" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-section">
+                    <div class="input-row">
+                        <div>
+                            <label>1st Repair Date:</label>
+                            <input type="date" name="repair_date_1" id="edit-repair-date-1" />
+                        </div>
+                        <div>
+                            <label>2nd Repair Date:</label>
+                            <input type="date" name="repair_date_2" id="edit-repair-date-2" />
+                        </div>
+                        <div>
+                            <label>3rd Repair Date:</label>
+                            <input type="date" name="repair_date_3" id="edit-repair-date-3" />
+                        </div>
+                        <div>
+                            <label>4th Repair Date:</label>
+                            <input type="date" name="repair_date_4" id="edit-repair-date-4" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="create-btn">Update</button>
+                    <button type="button" class="cancel-btn" id="cancelEdit">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="desktop.js"></script>
+
+    <script>
+        document.getElementById('desktop').onclick = () => window.location.href = 'index.html';
+
+        document.getElementById('cancelCreate').onclick = () => {
+            document.getElementById('createModal').style.display = 'none';
+        };
+
+        document.getElementById('cancelEdit').onclick = () => {
+            document.getElementById('editModal').style.display = 'none';
+        };
+
+    </script>
+
+</body>
+
+</html>
