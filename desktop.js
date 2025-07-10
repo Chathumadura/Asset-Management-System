@@ -48,6 +48,32 @@ function populateTable(data) {
     });
 }
 
+// Filter setup
+function setupFilters() {
+    document.getElementById("brand-filter").addEventListener("change", applyFilters);
+    document.getElementById("division-filter").addEventListener("change", applyFilters);
+    document.getElementById("year-filter").addEventListener("change", applyFilters);
+}
+
+function applyFilters() {
+    const brandValue = document.getElementById("brand-filter").value.toLowerCase();
+    const divisionValue = document.getElementById("division-filter").value.toLowerCase();
+    const yearValue = document.getElementById("year-filter").value;
+
+    const filteredData = allRows.filter(row => {
+        const brand = (row.brand || "").toLowerCase();
+        const division = (row.division || "").toLowerCase();
+        const year = (row.year || "").toString();
+
+        const matchesBrand = !brandValue || brand.includes(brandValue);
+        const matchesDivision = !divisionValue || division.includes(divisionValue);
+        const matchesYear = !yearValue || year === yearValue;
+
+        return matchesBrand && matchesDivision && matchesYear;
+    });
+
+    populateTable(filteredData);
+}
 
 
 
@@ -62,6 +88,36 @@ function closeCreateModal() {
     document.getElementById("createForm").reset();
 }
 
+// Create desktop record
+async function createDesktop(event) {
+    event.preventDefault();
+    const data = {
+        brand: document.getElementById("new-brand").value,
+        model: document.getElementById("new-model").value,
+        sn: document.getElementById("new-sn").value,
+        Division: document.getElementById("new-division").value,
+        user: document.getElementById("new-user").value,
+        PRN: document.getElementById("new-PRN").value,
+        year: document.getElementById("new-year").value,
+        cpu_moniter: document.getElementById("new-cpu-moniter").value,
+        ram_capacity: document.getElementById("new-ram-capacity").value,
+        hdd_capacity: document.getElementById("new-hdd-capacity").value,
+        processor_speed: document.getElementById("new-processor-speed").value,
+        os_version: document.getElementById("new-os-version").value,
+        repair_date_1: document.getElementById("new-repair-date-1").value,
+        repair_date_2: document.getElementById("new-repair-date-2").value,
+        repair_date_3: document.getElementById("new-repair-date-3").value,
+        repair_date_4: document.getElementById("new-repair-date-4").value,
+    };
+
+    try {
+        await window.electronAPI.dbCreateDesktop(data);
+        closeCreateModal();
+        await loadDesktopData();
+    } catch (err) {
+        alert("Failed to create record: " + err.message);
+    }
+}
 
 // Open Edit Modal and fill data
 async function openEditModal(id) {
@@ -102,7 +158,36 @@ function closeEditModal() {
 }
 
 // Update desktop record
+async function updateDesktop(event) {
+    event.preventDefault();
 
+    const data = {
+        brand: document.getElementById("edit-brand").value,
+        model: document.getElementById("edit-model").value,
+        sn: document.getElementById("edit-sn").value,
+        Division: document.getElementById("edit-division").value,
+        user: document.getElementById("edit-user").value,
+        PRN: document.getElementById("edit-PRN").value,
+        year: document.getElementById("edit-year").value,
+        cpu_moniter: document.getElementById("edit-cpu-moniter").value,
+        ram_capacity: document.getElementById("edit-ram-capacity").value,
+        hdd_capacity: document.getElementById("edit-hdd-capacity").value,
+        processor_speed: document.getElementById("edit-processor-speed").value,
+        os_version: document.getElementById("edit-os-version").value,
+        repair_date_1: document.getElementById("edit-repair-date-1").value,
+        repair_date_2: document.getElementById("edit-repair-date-2").value,
+        repair_date_3: document.getElementById("edit-repair-date-3").value,
+        repair_date_4: document.getElementById("edit-repair-date-4").value,
+    };
+
+    try {
+        await window.electronAPI.updateDesktop(data);
+        closeEditModal();
+        await loadDesktopData();
+    } catch (err) {
+        alert("Failed to update record: " + err.message);
+    }
+}
 
 // Delete desktop record
 async function deleteDesktop(id) {
