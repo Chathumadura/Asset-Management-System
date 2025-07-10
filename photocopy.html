@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Photocopy</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <div class="container">
+        <h1>Photocopy</h1>
+        <button id="photocopyBackBtn">Back</button>
+        <div class="filters">
+            <label for="photocopy-division-filter">Division:
+                <select id="photocopy-division-filter">
+                    <option value="">All</option>
+                    <option value="IT">IT</option>
+                    <option value="admin">admin</option>
+                    <option value="Lab">Lab</option>
+                    <option value="Export">Export</option>
+                    <option value="Finance">Finance</option>
+                </select>
+            </label>
+            <label for="photocopy-year-filter">Year:
+                <input type="text" id="photocopy-year-filter" placeholder="Enter year to filter" />
+            </label>
+            <button id="photocopy-createBtn">Create New</button>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Brand & Model No</th>
+                        <th>S/N</th>
+                        <th>Division</th>
+                        <th>User</th>
+                        <th>PRN</th>
+                        <th>Year</th>
+                        <th>1st Repair Date</th>
+                        <th>2nd Repair Date</th>
+                        <th>3rd Repair Date</th>
+                        <th>4th Repair Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="photocopy-data-body">
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="photocopyCreateModal" class="modal">
+        <div class="modal-content">
+            <h2>Add New Photocopy</h2>
+            <form id="photocopyCreateForm">
+                <div class="form-section">
+                    <h3>General Details</h3>
+                    <div class="input-row">
+                        <div>
+                            <label for="photocopy-new-no">No:</label>
+                            <input type="text" name="no" id="photocopy-new-no" disabled placeholder="Auto" />
+                        </div>
+                        <div>
+                            <label for="photocopy-new-brand-model">Brand & Model No:</label>
+                            <input type="text" name="brand_model" id="photocopy-new-brand-model" required />
+                        </div>
+                    </div>
+                    <div class="input-row">
+                        <div>
+                            <label for="photocopy-new-sn">S/N:</label>
+                            <input type="text" name="sn" id="photocopy-new-sn" required />
+                        </div>
+                        <div>
+                            <label for="photocopy-new-prn">PRN:</label>
+                            <input type="text" name="prn" id="photocopy-new-prn" />
+                        </div>
+                    </div>
+                    <div class="input-row">
+                        <div>
+                            <label for="photocopy-new-year">Year:</label>
+                            <input type="text" name="year" id="photocopy-new-year" />
+                        </div>
+                        <div></div>
+                    </div>
+                </div>
+                <div class="form-section">
+                    <h3>Assignment</h3>
+                    <div class="input-row">
+                        <div>
+                            <label for="photocopy-new-division">Division:</label>
+                            <select name="division" id="photocopy-new-division" required>
+                                <option value="">Select Division</option>
+                                <option value="IT">IT</option>
+                                <option value="admin">admin</option>
+                                <option value="Lab">Lab</option>
+                                <option value="Export">Export</option>
+                                <option value="Finance">Finance</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="photocopy-new-user">User:</label>
+                            <input type="text" name="user" id="photocopy-new-user" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-section">
+                    <h3>Repair History</h3>
+                    <div class="input-row">
+                        <div>
+                            <label for="photocopy-new-repair-date-1">1st Repair Date:</label>
+                            <input type="date" name="repair_date_1" id="photocopy-new-repair-date-1" />
+                        </div>
+                        <div>
+                            <label for="photocopy-new-repair-date-2">2nd Repair Date:</label>
+                            <input type="date" name="repair_date_2" id="photocopy-new-repair-date-2" />
+                        </div>
+                    </div>
+                    <div class="input-row">
+                        <div>
+                            <label for="photocopy-new-repair-date-3">3rd Repair Date:</label>
+                            <input type="date" name="repair_date_3" id="photocopy-new-repair-date-3" />
+                        </div>
+                        <div>
+                            <label for="photocopy-new-repair-date-4">4th Repair Date:</label>
+                            <input type="date" name="repair_date_4" id="photocopy-new-repair-date-4" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="create-btn">Create</button>
+                    <button type="button" class="cancel-btn" id="photocopy-cancelCreate">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="photocopyEditModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <h2>Edit Photocopy</h2>
+            <form id="photocopyEditForm">
+                <div class="form-section">
+                    <h3>General Details</h3>
+                    <div class="input-row">
+                        <div>
+                            <label for="photocopy-edit-no">No:</label>
+                            <input type="text" name="no" id="photocopy-edit-no" disabled placeholder="Auto" />
+                        </div>
+                        <div>
+                            <label for="photocopy-edit-brand-model">Brand & Model No:</label>
+                            <input type="text" name="brand_model" id="photocopy-edit-brand-model" required />
+                        </div>
+                    </div>
+                    <div class="input-row">
+                        <div>
+                            <label for="photocopy-edit-sn">S/N:</label>
+                            <input type="text" name="sn" id="photocopy-edit-sn" required readonly />
+                        </div>
+                        <div>
+                            <label for="photocopy-edit-prn">PRN:</label>
+                            <input type="text" name="prn" id="photocopy-edit-prn" />
+                        </div>
+                    </div>
+                    <div class="input-row">
+                        <div>
+                            <label for="photocopy-edit-year">Year:</label>
+                            <input type="text" name="year" id="photocopy-edit-year" />
+                        </div>
+                        <div></div>
+                    </div>
+                </div>
+                <div class="form-section">
+                    <h3>Assignment</h3>
+                    <div class="input-row">
+                        <div>
+                            <label for="photocopy-edit-division">Division:</label>
+                            <select name="division" id="photocopy-edit-division" required>
+                                <option value="">Select Division</option>
+                                <option value="IT">IT</option>
+                                <option value="admin">admin</option>
+                                <option value="Lab">Lab</option>
+                                <option value="Export">Export</option>
+                                <option value="Finance">Finance</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="photocopy-edit-user">User:</label>
+                            <input type="text" name="user" id="photocopy-edit-user" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-section">
+                    <h3>Repair History</h3>
+                    <div class="input-row">
+                        <div>
+                            <label for="photocopy-edit-repair-date-1">1st Repair Date:</label>
+                            <input type="date" name="repair_date_1" id="photocopy-edit-repair-date-1" />
+                        </div>
+                        <div>
+                            <label for="photocopy-edit-repair-date-2">2nd Repair Date:</label>
+                            <input type="date" name="repair_date_2" id="photocopy-edit-repair-date-2" />
+                        </div>
+                    </div>
+                    <div class="input-row">
+                        <div>
+                            <label for="photocopy-edit-repair-date-3">3rd Repair Date:</label>
+                            <input type="date" name="repair_date_3" id="photocopy-edit-repair-date-3" />
+                        </div>
+                        <div>
+                            <label for="photocopy-edit-repair-date-4">4th Repair Date:</label>
+                            <input type="date" name="repair_date_4" id="photocopy-edit-repair-date-4" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="create-btn">Save</button>
+                    <button type="button" class="cancel-btn" id="photocopy-cancelEdit">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="photocopy.js"></script>
+    <script>
+        document.getElementById('photocopy-createBtn').addEventListener('click', function () {
+            document.getElementById('photocopyCreateModal').style.display = 'flex';
+        });
+        document.getElementById('photocopy-cancelCreate').addEventListener('click', function () {
+            document.getElementById('photocopyCreateModal').style.display = 'none';
+        });
+        // Add event listener for cancel button in edit modal
+        document.getElementById('photocopy-cancelEdit').addEventListener('click', function () {
+            document.getElementById('photocopyEditModal').style.display = 'none';
+        });
+    </script>
+</body>
+
+</html>
