@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Scanner</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <div class="container">
+        <h1>Scanner</h1>
+        <button id="scannerBackBtn">Back</button>
+        <div class="filters">
+            <label for="scanner-division-filter">Division:
+                <select id="scanner-division-filter">
+                    <option value="">All</option>
+                    <option value="IT">IT</option>
+                    <option value="admin">admin</option>
+                    <option value="Lab">Lab</option>
+                    <option value="Export">Export</option>
+                    <option value="Finance">Finance</option>
+                </select>
+            </label>
+            <label for="scanner-year-filter">Year:
+                <input type="text" id="scanner-year-filter" placeholder="Enter year to filter" />
+            </label>
+            <button id="scanner-createBtn">Create New</button>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Brand & Model No</th>
+                        <th>S/N</th>
+                        <th>Division</th>
+                        <th>User</th>
+                        <th>PRN</th>
+                        <th>Year</th>
+                        <th>1st Repair Date</th>
+                        <th>2nd Repair Date</th>
+                        <th>3rd Repair Date</th>
+                        <th>4th Repair Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="scanner-data-body">
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="scannerCreateModal" class="modal">
+        <div class="modal-content">
+            <h2>Add New Scanner</h2>
+            <form id="scannerCreateForm">
+                <div class="form-section">
+                    <h3>General Details</h3>
+                    <div class="input-row">
+                        <div>
+                            <label for="scanner-new-sn">S/N:</label>
+                            <input type="text" id="scanner-new-sn" required>
+                        </div>
+                        <div>
+                            <label for="scanner-new-brand-model">Brand & Model No:</label>
+                            <input type="text" id="scanner-new-brand-model">
+                        </div>
+                    </div>
+                    <div class="input-row">
+                        <div>
+                            <label for="scanner-new-prn">PRN:</label>
+                            <input type="text" id="scanner-new-prn">
+                        </div>
+                        <div>
+                            <label for="scanner-new-year">Year:</label>
+                            <input type="text" id="scanner-new-year">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-section">
+                    <h3>Assignment</h3>
+                    <div class="input-row">
+                        <div>
+                            <label for="scanner-new-division">Division:</label>
+                            <select id="scanner-new-division" required>
+                                <option value="">Select Division</option>
+                                <option value="IT">IT</option>
+                                <option value="Admin">Admin</option>
+                                <option value="Lab">Lab</option>
+                                <option value="Export">Export</option>
+                                <option value="Finance">Finance</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="scanner-new-user">User:</label>
+                            <input type="text" id="scanner-new-user">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-section">
+                    <h3>Repair History</h3>
+                    <div class="input-row">
+                        <div>
+                            <label for="scanner-new-repair-date-1">1st Repair Date:</label>
+                            <input type="date" id="scanner-new-repair-date-1">
+                        </div>
+                        <div>
+                            <label for="scanner-new-repair-date-2">2nd Repair Date:</label>
+                            <input type="date" id="scanner-new-repair-date-2">
+                        </div>
+                    </div>
+                    <div class="input-row">
+                        <div>
+                            <label for="scanner-new-repair-date-3">3rd Repair Date:</label>
+                            <input type="date" id="scanner-new-repair-date-3">
+                        </div>
+                        <div>
+                            <label for="scanner-new-repair-date-4">4th Repair Date:</label>
+                            <input type="date" id="scanner-new-repair-date-4">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="create-btn">Create</button>
+                    <button type="button" class="cancel-btn" id="scanner-cancelCreate">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="scannerEditModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <h2>Edit Scanner</h2>
+            <form id="scannerEditForm">
+                <div class="form-section">
+                    <h3>General Details</h3>
+                    <div class="input-row">
+                        <div>
+                            <label for="scanner-edit-sn">S/N:</label>
+                            <input type="text" name="sn" id="scanner-edit-sn" required readonly />
+                        </div>
+                        <div>
+                            <label for="scanner-edit-brand-model">Brand & Model No:</label>
+                            <input type="text" name="brand_model" id="scanner-edit-brand-model" />
+                        </div>
+                    </div>
+                    <div class="input-row">
+                        <div>
+                            <label for="scanner-edit-prn">PRN:</label>
+                            <input type="text" name="prn" id="scanner-edit-prn" />
+                        </div>
+                        <div>
+                            <label for="scanner-edit-year">Year:</label>
+                            <input type="text" name="year" id="scanner-edit-year" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Assignment</h3>
+                    <div class="input-row">
+                        <div>
+                            <label for="scanner-edit-division">Division:</label>
+                            <select name="division" id="scanner-edit-division" required>
+                                <option value="">Select Division</option>
+                                <option value="IT">IT</option>
+                                <option value="admin">admin</option>
+                                <option value="Lab">Lab</option>
+                                <option value="Export">Export</option>
+                                <option value="Finance">Finance</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="scanner-edit-user">User:</label>
+                            <input type="text" name="user" id="scanner-edit-user" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Repair History</h3>
+                    <div class="input-row">
+                        <div>
+                            <label for="scanner-edit-repair-date-1">1st Repair Date:</label>
+                            <input type="date" name="repair_date_1" id="scanner-edit-repair-date-1" />
+                        </div>
+                        <div>
+                            <label for="scanner-edit-repair-date-2">2nd Repair Date:</label>
+                            <input type="date" name="repair_date_2" id="scanner-edit-repair-date-2" />
+                        </div>
+                    </div>
+                    <div class="input-row">
+                        <div>
+                            <label for="scanner-edit-repair-date-3">3rd Repair Date:</label>
+                            <input type="date" name="repair_date_3" id="scanner-edit-repair-date-3" />
+                        </div>
+                        <div>
+                            <label for="scanner-edit-repair-date-4">4th Repair Date:</label>
+                            <input type="date" name="repair_date_4" id="scanner-edit-repair-date-4" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="create-btn">Save</button>
+                    <button type="button" class="cancel-btn" id="scanner-cancelEdit">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        document.getElementById('scannerBackBtn').addEventListener('click', () => {
+            window.location.href = 'index.html';
+        });
+        document.getElementById('scanner-createBtn').addEventListener('click', () => {
+            document.getElementById('scannerCreateModal').style.display = 'flex';
+        });
+        document.getElementById('scanner-cancelCreate').addEventListener('click', () => {
+            document.getElementById('scannerCreateModal').style.display = 'none';
+        });
+        document.getElementById('scanner-cancelEdit').addEventListener('click', () => {
+            document.getElementById('scannerEditModal').style.display = 'none';
+        });
+    </script>
+</body>
+<script src="scanner.js"></script>
+
+</html>
