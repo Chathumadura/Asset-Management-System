@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Printers</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Printers</h1>
+        <button id="printersBackBtn" class="navBtn">Back</button>
+
+        <div class="filters">
+            <label for="printers-division-filter">Division:
+                <select id="printers-division-filter">
+                    <option value="">All</option>
+                </select>
+            </label>
+            <label for="printers-year-filter">Year:
+                <input type="text" id="printers-year-filter" placeholder="Enter year to filter" />
+            </label>
+            <button id="printers-createBtn">Create New</button>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Brand & Model No</th>
+                        <th>S/N</th>
+                        <th>Division</th>
+                        <th>User</th>
+                        <th>PRN</th>
+                        <th>Year</th>
+                        <th>IP Address</th>
+                        <th>1st Repair Date</th>
+                        <th>2nd Repair Date</th>
+                        <th>3rd Repair Date</th>
+                        <th>4th Repair Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="printers-data-body">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="printersCreateModal" class="modal">
+        <div class="modal-content">
+            <h2>Add New Printer</h2>
+            <form id="printersCreateForm">
+                <div class="input-row">
+                    <div>
+                        <label for="brand_model">Brand & Model No</label>
+                        <input type="text" name="brand_model" required />
+                    </div>
+                    <div>
+                        <label for="sn">S/N</label>
+                        <input type="text" name="sn" required />
+                    </div>
+                </div>
+                <div class="input-row">
+                    <div>
+                        <label for="division">Division</label>
+                        <select name="division" required>
+                            <option value="">Select Division</option>
+                            <option value="IT">IT</option>
+                            <option value="Admin">Admin</option>
+                            <option value="Finance">Finance</option>
+                            <option value="HR">HR</option>
+                            <option value="Operations">Operations</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="user">User</label>
+                        <input type="text" name="user" />
+                    </div>
+                </div>
+                <div class="input-row">
+                    <div>
+                        <label for="prn">PRN</label>
+                        <input type="text" name="prn" />
+                    </div>
+                    <div>
+                        <label for="year">Year</label>
+                        <input type="text" name="year" />
+                    </div>
+                </div>
+                <div class="input-row">
+                    <div>
+                        <label for="ip_address">IP Address</label>
+                        <input type="text" name="ip_address" />
+                    </div>
+                    <div>
+                        <label for="repair_date_1">1st Repair Date</label>
+                        <input type="date" name="repair_date_1" />
+                    </div>
+                </div>
+                <div class="input-row">
+                    <div>
+                        <label for="repair_date_2">2nd Repair Date</label>
+                        <input type="date" name="repair_date_2" />
+                    </div>
+                    <div>
+                        <label for="repair_date_3">3rd Repair Date</label>
+                        <input type="date" name="repair_date_3" />
+                    </div>
+                </div>
+                <div class="input-row">
+                    <div>
+                        <label for="repair_date_4">4th Repair Date</label>
+                        <input type="date" name="repair_date_4" />
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="create-btn">Create</button>
+                    <button type="button" id="printers-cancelCreate" class="cancel-btn">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="printersEditModal" class="modal" data-sn="">
+        <div class="modal-content">
+            <h2>Edit Printer Details</h2>
+            <form id="printersEditForm">
+
+                <div class="form-section">
+                    <h3>General Information</h3>
+                    <div class="input-row">
+                        <div>
+                            <label for="printers-edit-no">No</label>
+                            <input id="printers-edit-no" type="text" readonly />
+                        </div>
+                        <div>
+                            <label for="printers-edit-brand-model">Brand & Model No</label>
+                            <input id="printers-edit-brand-model" type="text" name="brand_model" />
+                        </div>
+                    </div>
+                    <div class="input-row">
+                        <div>
+                            <label for="printers-edit-sn">Serial Number</label>
+                            <input id="printers-edit-sn" type="text" name="sn" readonly />
+                        </div>
+                        <div>
+                            <label for="printers-edit-prn">PRN</label>
+                            <input id="printers-edit-prn" type="text" name="prn" />
+                        </div>
+                    </div>
+                    <div class="input-row">
+                        <div>
+                            <label for="printers-edit-year">Procurement Year</label>
+                            <input id="printers-edit-year" type="text" name="year" />
+                        </div>
+                        <div>
+                            <label for="printers-edit-ip-address">IP Address</label>
+                            <input id="printers-edit-ip-address" type="text" name="ip_address" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Assignment Details</h3>
+                    <div class="input-row">
+                        <div>
+                            <label for="printers-edit-division">Division</label>
+                            <select id="printers-edit-division" name="division">
+                                <option value="">Select Division</option>
+                                <option value="IT">IT</option>
+                                <option value="Admin">Admin</option>
+                                <option value="Finance">Finance</option>
+                                <option value="HR">HR</option>
+                                <option value="Operations">Operations</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="printers-edit-user">User</label>
+                            <input id="printers-edit-user" type="text" name="user" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Repair History</h3>
+                    <div class="input-row">
+                        <div>
+                            <label for="printers-edit-repair-date-1">1st Repair Date</label>
+                            <input id="printers-edit-repair-date-1" type="date" name="repair_date_1" />
+                        </div>
+                        <div>
+                            <label for="printers-edit-repair-date-2">2nd Repair Date</label>
+                            <input id="printers-edit-repair-date-2" type="date" name="repair_date_2" />
+                        </div>
+                    </div>
+                    <div class="input-row">
+                        <div>
+                            <label for="printers-edit-repair-date-3">3rd Repair Date</label>
+                            <input id="printers-edit-repair-date-3" type="date" name="repair_date_3" />
+                        </div>
+                        <div>
+                            <label for="printers-edit-repair-date-4">4th Repair Date</label>
+                            <input id="printers-edit-repair-date-4" type="date" name="repair_date_4" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="update-btn create-btn">Update</button>
+                    <button type="button" id="printers-cancelEdit" class="cancel-btn">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="printers.js"></script>
+    <script>
+        // These are global event listeners that might be useful if you're not managing modal display
+        // purely within printers.js. I've integrated these into printers.js in the previous response,
+        // but keeping them here if you prefer a mix.
+        document.getElementById('printersBackBtn').onclick = () => window.location.href = 'index.html';
+
+        // Assuming you're using a 'show' class for modal visibility like in laptop.html
+        document.getElementById('printers-createBtn').onclick = () => {
+            document.getElementById('printersCreateModal').classList.add('show');
+        };
+        document.getElementById('printers-cancelCreate').onclick = () => {
+            document.getElementById('printersCreateModal').classList.remove('show');
+            document.getElementById('printersCreateForm').reset(); // Reset form on cancel
+        };
+        // Also for the edit modal cancel button
+        document.getElementById('printers-cancelEdit').onclick = () => {
+            document.getElementById('printersEditModal').classList.remove('show');
+            document.getElementById('printersEditForm').reset(); // Reset form on cancel
+        };
+
+
+
+    </script>
+</body>
+
+</html>
