@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>UPS</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <div class="container">
+        <h1>UPS</h1>
+        <button id="upsBackBtn">Back</button>
+        <div class="filters">
+            <label for="ups-division-filter">Division:
+                <select id="ups-division-filter">
+                    <option value="">All</option>
+                    <option value="IT">IT</option>
+                    <option value="admin">admin</option>
+                    <option value="Lab">Lab</option>
+                    <option value="Export">Export</option>
+                    <option value="Finance">Finance</option>
+                </select>
+            </label>
+            <label for="ups-year-filter">Year:
+                <input type="text" id="ups-year-filter" placeholder="Enter year to filter" />
+            </label>
+            <button id="ups-createBtn">Create New</button>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Brand & Model No</th>
+                        <th>S/N</th>
+                        <th>Division</th>
+                        <th>User</th>
+                        <th>PRN</th>
+                        <th>Year</th>
+                        <th>1st Repair Date</th>
+                        <th>2nd Repair Date</th>
+                        <th>3rd Repair Date</th>
+                        <th>4th Repair Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="ups-data-body">
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="upsCreateModal" class="modal">
+        <div class="modal-content">
+            <h2>Add New UPS</h2>
+            <form id="upsCreateForm">
+                <div class="form-section">
+                    <h3>General Details</h3>
+                    <div class="input-row">
+                        <div>
+                            <label for="ups-new-no">No:</label>
+                            <input type="text" name="no" id="ups-new-no" disabled placeholder="Auto" />
+                        </div>
+                        <div>
+                            <label for="ups-new-brand-model">Brand & Model No:</label>
+                            <input type="text" name="brand_model" id="ups-new-brand-model" required />
+                        </div>
+                    </div>
+                    <div class="input-row">
+                        <div>
+                            <label for="ups-new-sn">S/N:</label>
+                            <input type="text" name="sn" id="ups-new-sn" required />
+                        </div>
+                        <div>
+                            <label for="ups-new-prn">PRN:</label>
+                            <input type="text" name="prn" id="ups-new-prn" />
+                        </div>
+                    </div>
+                    <div class="input-row">
+                        <div>
+                            <label for="ups-new-year">Year:</label>
+                            <input type="text" name="year" id="ups-new-year" />
+                        </div>
+                        <div></div>
+                    </div>
+                </div>
+                <div class="form-section">
+                    <h3>Assignment</h3>
+                    <div class="input-row">
+                        <div>
+                            <label for="ups-new-division">Division:</label>
+                            <select name="division" id="ups-new-division" required>
+                                <option value="">Select Division</option>
+                                <option value="IT">IT</option>
+                                <option value="admin">admin</option>
+                                <option value="Lab">Lab</option>
+                                <option value="Export">Export</option>
+                                <option value="Finance">Finance</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="ups-new-user">User:</label>
+                            <input type="text" name="user" id="ups-new-user" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-section">
+                    <h3>Repair History</h3>
+                    <div class="input-row">
+                        <div>
+                            <label for="ups-new-repair-date-1">1st Repair Date:</label>
+                            <input type="date" name="repair_date_1" id="ups-new-repair-date-1" />
+                        </div>
+                        <div>
+                            <label for="ups-new-repair-date-2">2nd Repair Date:</label>
+                            <input type="date" name="repair_date_2" id="ups-new-repair-date-2" />
+                        </div>
+                    </div>
+                    <div class="input-row">
+                        <div>
+                            <label for="ups-new-repair-date-3">3rd Repair Date:</label>
+                            <input type="date" name="repair_date_3" id="ups-new-repair-date-3" />
+                        </div>
+                        <div>
+                            <label for="ups-new-repair-date-4">4th Repair Date:</label>
+                            <input type="date" name="repair_date_4" id="ups-new-repair-date-4" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="create-btn">Create</button>
+                    <button type="button" class="cancel-btn" id="ups-cancelCreate">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="upsEditModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <h2>Edit UPS</h2>
+            <form id="upsEditForm">
+                <div class="form-section">
+                    <h3>General Details</h3>
+                    <div class="input-row">
+                        <div>
+                            <label for="ups-edit-no">No:</label>
+                            <input type="text" name="no" id="ups-edit-no" disabled placeholder="Auto" />
+                        </div>
+                        <div>
+                            <label for="ups-edit-brand-model">Brand & Model No:</label>
+                            <input type="text" name="brand_model" id="ups-edit-brand-model" required />
+                        </div>
+                    </div>
+                    <div class="input-row">
+                        <div>
+                            <label for="ups-edit-sn">S/N:</label>
+                            <input type="text" name="sn" id="ups-edit-sn" required readonly />
+                        </div>
+                        <div>
+                            <label for="ups-edit-prn">PRN:</label>
+                            <input type="text" name="prn" id="ups-edit-prn" />
+                        </div>
+                    </div>
+                    <div class="input-row">
+                        <div>
+                            <label for="ups-edit-year">Year:</label>
+                            <input type="text" name="year" id="ups-edit-year" />
+                        </div>
+                        <div></div>
+                    </div>
+                </div>
+                <div class="form-section">
+                    <h3>Assignment</h3>
+                    <div class="input-row">
+                        <div>
+                            <label for="ups-edit-division">Division:</label>
+                            <select name="division" id="ups-edit-division" required>
+                                <option value="">Select Division</option>
+                                <option value="IT">IT</option>
+                                <option value="admin">admin</option>
+                                <option value="Lab">Lab</option>
+                                <option value="Export">Export</option>
+                                <option value="Finance">Finance</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="ups-edit-user">User:</label>
+                            <input type="text" name="user" id="ups-edit-user" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-section">
+                    <h3>Repair History</h3>
+                    <div class="input-row">
+                        <div>
+                            <label for="ups-edit-repair-date-1">1st Repair Date:</label>
+                            <input type="date" name="repair_date_1" id="ups-edit-repair-date-1" />
+                        </div>
+                        <div>
+                            <label for="ups-edit-repair-date-2">2nd Repair Date:</label>
+                            <input type="date" name="repair_date_2" id="ups-edit-repair-date-2" />
+                        </div>
+                    </div>
+                    <div class="input-row">
+                        <div>
+                            <label for="ups-edit-repair-date-3">3rd Repair Date:</label>
+                            <input type="date" name="repair_date_3" id="ups-edit-repair-date-3" />
+                        </div>
+                        <div>
+                            <label for="ups-edit-repair-date-4">4th Repair Date:</label>
+                            <input type="date" name="repair_date_4" id="ups-edit-repair-date-4" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="create-btn">Save</button>
+                    <button type="button" class="cancel-btn" id="ups-cancelEdit">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="ups.js"></script>
+    <script>
+        document.getElementById('ups-createBtn').addEventListener('click', function () {
+            document.getElementById('upsCreateModal').style.display = 'flex';
+        });
+        document.getElementById('ups-cancelCreate').addEventListener('click', function () {
+            document.getElementById('upsCreateModal').style.display = 'none';
+        });
+        // Add event listener for cancel button in edit modal
+        document.getElementById('ups-cancelEdit').addEventListener('click', function () {
+            document.getElementById('upsEditModal').style.display = 'none';
+        });
+    </script>
+</body>
+
+</html>
