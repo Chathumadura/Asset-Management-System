@@ -141,3 +141,126 @@ ipcMain.handle('update-laptop-user', async (event, row) => {
         throw err;
     }
 });
+
+
+// --- Scanners IPC Handlers ---
+ipcMain.handle('get-scanners', async () => {
+    try {
+        return await db.getScanners(); // Assuming db.getScanners exists
+    } catch (err) {
+        console.error('Error in get-scanners:', err);
+        throw err;
+    }
+});
+
+ipcMain.handle('create-scanner', async (event, row) => {
+    try {
+        return await db.createScanner(row);
+    } catch (err) {
+        console.error('Error in create-scanner:', err);
+        throw err;
+    }
+});
+
+ipcMain.handle('update-scanner', async (event, row) => {
+    try {
+        return await db.updateScanner(row);
+    } catch (err) {
+        console.error('Error in update-scanner:', err);
+        throw err;
+    }
+});
+
+ipcMain.handle('delete-scanner', async (event, sn) => {
+    try {
+        return await db.deleteScanner(sn);
+    } catch (err) {
+        console.error('Error in delete-scanner:', err);
+        throw err;
+    }
+});
+
+// --- UPS IPC Handlers ---
+ipcMain.handle('get-ups', async () => {
+    try {
+        return await db.getUPSs(); // Assuming db.getUPSs exists
+    } catch (err) {
+        console.error('Error in get-ups:', err);
+        throw err;
+    }
+});
+
+ipcMain.handle('create-ups', async (event, row) => {
+    try {
+        return await db.createUPS(row);
+    } catch (err) {
+        console.error('Error in create-ups:', err);
+        throw err;
+    }
+});
+
+ipcMain.handle('delete-ups', async (event, sn) => {
+    try {
+        return await db.deleteUPS(sn);
+    } catch (err) {
+        console.error('Error in delete-ups:', err);
+        throw err;
+    }
+});
+
+// --- Printers IPC Handlers ---
+ipcMain.handle('get-printers', async () => {
+    try {
+        return await db.getPrinters(); // Assuming db.getPrinters exists
+    } catch (err) {
+        console.error('Error in get-printers:', err);
+        throw err;
+    }
+});
+
+ipcMain.handle('create-printer', async (event, row) => {
+    try {
+        return await db.createPrinter(row);
+    } catch (err) {
+        console.error('Error in create-printer:', err);
+        throw err;
+    }
+});
+
+ipcMain.handle('delete-printer', async (event, sn) => {
+    try {
+        return await db.deletePrinter(sn);
+    } catch (err) {
+        console.error('Error in delete-printer:', err);
+        throw err;
+    }
+});
+
+// --- Photocopy IPC Handlers ---
+ipcMain.handle('get-photocopy', async () => {
+    try {
+        return await db.getPhotocopy(); // Assuming db.getPhotocopy exists
+    } catch (err) {
+        console.error('Error in get-photocopy:', err);
+        throw err;
+    }
+});
+
+ipcMain.handle('create-photocopy', async (event, row) => {
+    try {
+        return await db.createPhotocopy(row);
+    } catch (err) {
+        console.error('Error in create-photocopy:', err);
+        throw err;
+    }
+});
+
+ipcMain.handle('delete-photocopy', async (event, sn) => {
+    try {
+        return await db.deletePhotocopy(sn);
+    } catch (err) {
+        console.error('Error in delete-photocopy:', err);
+        throw err;
+    }
+});
+
