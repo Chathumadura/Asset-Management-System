@@ -5,11 +5,18 @@
     <meta charset="UTF-8" />
     <title>Desktop Computer Info</title>
     <link rel="stylesheet" href="style.css" />
+    <!-- jsPDF library for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- jsPDF AutoTable plugin for table generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 </head>
 
 <body>
     <div class="container">
-        <h1>Desktop Computer Info</h1>
+        <div class="header">
+            <img src="tealogo.jpg" alt="Logo" style="width: 100px; height: auto;" />
+            <h1>Desktop Computer Info</h1>
+        </div>
         <button id="desktop">Back</button>
         <div class="filters">
             <label for="brand-filter">Brand:
@@ -28,18 +35,36 @@
             </label>
             <label for="division-filter">Division:
                 <select id="division-filter">
+                    <option value="">Select Division</option>
                     <option value="">All</option>
                     <option value="IT">IT</option>
                     <option value="admin">admin</option>
                     <option value="Lab">Lab</option>
                     <option value="Export">Export</option>
                     <option value="Finance">Finance</option>
+                    <option value="Baduraliya">Baduraliya R\O</option>
+                    <option value="Galle">Galle R\O</option>
+                    <option value="Gov.Audit">Gov.Audit</option>
+                    <option value="Internal">Internal Audit</option>
+                    <option value="Matara">Matara R\O</option>
+                    <option value="Nuwaraeliya">Nuwaraeliya R\O</option>
+                    <option value="Procurement">Procurement</option>
+                    <option value="Promotion">Promotion</option>
+                    <option value="Rathnapura">Rathnapura R\O</option>
+                    <option value="Sales">Sales Counter</option>
+                    <option value="Secretary">Secretary</option>
+                    <option value="Stat">Stat</option>
+                    <option value="Stores">Stores</option>
+                    <option value="TCD">TCD</option>
+                    <option value="Tea">Tea Testing</option>
+                    <option value="Gampola"> Gampola R.office</option>
                 </select>
             </label>
             <label for="year-filter">Year:
                 <input type="text" id="year-filter" placeholder="Enter year to filter" />
             </label>
             <button id="createBtn">Create New</button>
+            <button id="generateReportBtn">Generate Report</button>
         </div>
         <div class="table-container">
             <table>
@@ -92,11 +117,28 @@
                             <label>Division:</label>
                             <select name="Division" id="new-division" required>
                                 <option value="">Select Division</option>
+                                <option value="">All</option>
                                 <option value="IT">IT</option>
                                 <option value="admin">admin</option>
                                 <option value="Lab">Lab</option>
                                 <option value="Export">Export</option>
                                 <option value="Finance">Finance</option>
+                                <option value="Baduraliya">Baduraliya R\O</option>
+                                <option value="Galle">Galle R\O</option>
+                                <option value="Gov.Audit">Gov.Audit</option>
+                                <option value="Internal">Internal Audit</option>
+                                <option value="Matara">Matara R\O</option>
+                                <option value="Nuwaraeliya">Nuwaraeliya R\O</option>
+                                <option value="Procurement">Procurement</option>
+                                <option value="Promotion">Promotion</option>
+                                <option value="Rathnapura">Rathnapura R\O</option>
+                                <option value="Sales">Sales Counter</option>
+                                <option value="Secretary">Secretary</option>
+                                <option value="Stat">Stat</option>
+                                <option value="Stores">Stores</option>
+                                <option value="TCD">TCD</option>
+                                <option value="Tea">Tea Testing</option>
+                                <option value="Gampola"> Gampola R.office</option>
                             </select>
                         </div>
                         <div>
@@ -169,12 +211,17 @@
         </div>
     </div>
 
+
     <div id="editModal" class="modal" style="display:none;">
         <div class="modal-content">
             <h2>Edit Desktop Computer Details</h2>
             <form id="editForm">
                 <div class="form-section">
                     <div class="input-row">
+
+                        <input type="hidden" id="edit-id" />
+
+
                         <div>
                             <label>Brand :</label>
                             <input type="text" name="brand" id="edit-brand" required />
@@ -191,11 +238,28 @@
                             <label>Division:</label>
                             <select name="Division" id="edit-division" required>
                                 <option value="">Select Division</option>
+                                <option value="">All</option>
                                 <option value="IT">IT</option>
                                 <option value="admin">admin</option>
                                 <option value="Lab">Lab</option>
                                 <option value="Export">Export</option>
                                 <option value="Finance">Finance</option>
+                                <option value="Baduraliya">Baduraliya R\O</option>
+                                <option value="Galle">Galle R\O</option>
+                                <option value="Gov.Audit">Gov.Audit</option>
+                                <option value="Internal">Internal Audit</option>
+                                <option value="Matara">Matara R\O</option>
+                                <option value="Nuwaraeliya">Nuwaraeliya R\O</option>
+                                <option value="Procurement">Procurement</option>
+                                <option value="Promotion">Promotion</option>
+                                <option value="Rathnapura">Rathnapura R\O</option>
+                                <option value="Sales">Sales Counter</option>
+                                <option value="Secretary">Secretary</option>
+                                <option value="Stat">Stat</option>
+                                <option value="Stores">Stores</option>
+                                <option value="TCD">TCD</option>
+                                <option value="Tea">Tea Testing</option>
+                                <option value="Gampola"> Gampola R.office</option>
                             </select>
                         </div>
                         <div>
@@ -281,6 +345,8 @@
             document.getElementById('editModal').style.display = 'none';
         };
 
+        // The edit form submission is handled in desktop.js
+        // No need to set onsubmit here as it's already handled in the external script
     </script>
 
 </body>
