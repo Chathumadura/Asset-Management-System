@@ -1,13 +1,34 @@
 window.addEventListener('DOMContentLoaded', () => {
     let allRows = [];
 
+    // Date formatting utility functions
+    function formatDate(dateString) {
+        if (!dateString || dateString === '') return '';
+        try {
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) return dateString;
+            return date.toLocaleDateString('en-GB', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
+        } catch (e) {
+            return dateString;
+        }
+    }
+
     // Load all laptop users initially
     loadLaptops();
 
     // Fetch and render laptop users
     async function loadLaptops() {
-        allRows = await window.electronAPI.getLaptopUsers(); // Ensure this matches your IPC call
-        renderTable(allRows);
+        try {
+            allRows = await window.electronAPI.getLaptopUsers(); // Ensure this matches your IPC call
+
+            renderTable(allRows);
+        } catch (error) {
+            console.error("Error loading laptop data:", error);
+        }
     }
 
     // Render laptop data rows in the table
@@ -20,19 +41,21 @@ window.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        rows.forEach((row, idx) => {
+
+
+        rows.forEach((row) => {
             const tr = document.createElement('tr');
             tr.innerHTML = `
-                <td>${idx + 1}</td>
+                <td>${row.id || ''}</td>
                 <td>${row.sn || ''}</td>
                 <td>${row.division || ''}</td>
                 <td>${row.user || ''}</td>
                 <td>${row.prn || ''}</td>
                 <td>${row.year || ''}</td>
-                <td>${row['1st Repair Date'] || ''}</td>
-                <td>${row['2nd Repair Date'] || ''}</td>
-                <td>${row['3rd Repair Date'] || ''}</td>
-                <td>${row['4th Repair Date'] || ''}</td>
+                <td>${formatDate(row.repair_date_1)}</td>
+                <td>${formatDate(row.repair_date_2)}</td>
+                <td>${formatDate(row.repair_date_3)}</td>
+                <td>${formatDate(row.repair_date_4)}</td>
                 <td>
                     <button class="edit-btn" data-id="${row.id}">Edit</button>
                     <button class="delete-btn" data-id="${row.id}">Delete</button>
@@ -65,10 +88,10 @@ window.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('laptop-edit-user').value = row.user || '';
                 document.getElementById('laptop-edit-prn').value = row.prn || '';
                 document.getElementById('laptop-edit-year').value = row.year || '';
-                document.getElementById('laptop-edit-repair-date-1').value = row['1st Repair Date'] || '';
-                document.getElementById('laptop-edit-repair-date-2').value = row['2nd Repair Date'] || '';
-                document.getElementById('laptop-edit-repair-date-3').value = row['3rd Repair Date'] || '';
-                document.getElementById('laptop-edit-repair-date-4').value = row['4th Repair Date'] || '';
+                document.getElementById('laptop-edit-repair-date-1').value = row.repair_date_1 || '';
+                document.getElementById('laptop-edit-repair-date-2').value = row.repair_date_2 || '';
+                document.getElementById('laptop-edit-repair-date-3').value = row.repair_date_3 || '';
+                document.getElementById('laptop-edit-repair-date-4').value = row.repair_date_4 || '';
 
                 // Store id in modal attribute for update reference
                 const modal = document.getElementById('laptopEditModal');
@@ -106,10 +129,10 @@ window.addEventListener('DOMContentLoaded', () => {
             user: form.user.value.trim(),
             prn: form.prn.value.trim(),
             year: form.year.value.trim(),
-            "1st Repair Date": form.repair_date_1.value || null,
-            "2nd Repair Date": form.repair_date_2.value || null,
-            "3rd Repair Date": form.repair_date_3.value || null,
-            "4th Repair Date": form.repair_date_4.value || null,
+            repair_date_1: document.getElementById("laptop-edit-repair-date-1").value.trim(),
+            repair_date_2: document.getElementById("laptop-edit-repair-date-2").value.trim(),
+            repair_date_3: document.getElementById("laptop-edit-repair-date-3").value.trim(),
+            repair_date_4: document.getElementById("laptop-edit-repair-date-4").value.trim(),
         };
 
         try {
@@ -143,21 +166,119 @@ window.addEventListener('DOMContentLoaded', () => {
             user: document.getElementById('laptop-edit-user').value.trim(),
             prn: document.getElementById('laptop-edit-prn').value.trim(),
             year: document.getElementById('laptop-edit-year').value.trim(),
-            "1st Repair Date": document.getElementById('laptop-edit-repair-date-1').value || null,
-            "2nd Repair Date": document.getElementById('laptop-edit-repair-date-2').value || null,
-            "3rd Repair Date": document.getElementById('laptop-edit-repair-date-3').value || null,
-            "4th Repair Date": document.getElementById('laptop-edit-repair-date-4').value || null,
+            repair_date_1: document.getElementById("laptop-edit-repair-date-1").value.trim(),
+            repair_date_2: document.getElementById("laptop-edit-repair-date-2").value.trim(),
+            repair_date_3: document.getElementById("laptop-edit-repair-date-3").value.trim(),
+            repair_date_4: document.getElementById("laptop-edit-repair-date-4").value.trim(),
         };
 
         try {
             await window.electronAPI.updateLaptopUser(updatedRow); // Ensure this matches your IPC call
             alert('Laptop user updated successfully!');
             modal.style.display = 'none';
-            document.getElementById('laptopEditForm').reset(); // Reset form after successful update
+            // Reset form after successful update
             loadLaptops(); // Reload data to show changes
         } catch (err) {
             console.error('Failed to update laptop user:', err);
             alert('Update failed, please check the console for details.');
         }
     };
+
+    // Generate PDF report function
+    async function generateReport() {
+        try {
+            // Get the current filtered data
+            const divisionValue = document.getElementById('laptop-division-filter').value.trim().toLowerCase();
+            const yearValue = document.getElementById('laptop-year-filter').value.trim();
+
+            const filtered = allRows.filter(row => {
+                const divisionMatch = !divisionValue || (row.division || '').toLowerCase().includes(divisionValue);
+                const yearMatch = !yearValue || (row.year || '').toString().includes(yearValue);
+                return divisionMatch && yearMatch;
+            });
+
+            if (filtered.length === 0) {
+                alert('No data available to generate report!');
+                return;
+            }
+
+            // Create PDF document
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Add title
+            doc.setFontSize(16);
+            doc.text('Laptop Users Report', 14, 15);
+            doc.setFontSize(10);
+            doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 14, 22);
+
+            // Add filter information if any filters are applied
+            let filterInfo = '';
+            if (divisionValue) {
+                filterInfo += `Division: ${divisionValue} `;
+            }
+            if (yearValue) {
+                filterInfo += `Year: ${yearValue}`;
+            }
+            if (filterInfo) {
+                doc.text(`Filters: ${filterInfo}`, 14, 29);
+            }
+
+            // Prepare table data
+            const tableData = filtered.map(row => [
+                row.id || '',
+                row.sn || '',
+                row.division || '',
+                row.user || '',
+                row.prn || '',
+                row.year || '',
+                formatDate(row.repair_date_1) || '',
+                formatDate(row.repair_date_2) || '',
+                formatDate(row.repair_date_3) || '',
+                formatDate(row.repair_date_4) || ''
+            ]);
+
+            // Define table columns
+            const tableColumns = [
+                { header: 'No', dataKey: 'id' },
+                { header: 'S/N', dataKey: 'sn' },
+                { header: 'Division', dataKey: 'division' },
+                { header: 'User', dataKey: 'user' },
+                { header: 'PRN', dataKey: 'prn' },
+                { header: 'Year', dataKey: 'year' },
+                { header: '1st Repair Date', dataKey: 'repair_date_1' },
+                { header: '2nd Repair Date', dataKey: 'repair_date_2' },
+                { header: '3rd Repair Date', dataKey: 'repair_date_3' },
+                { header: '4th Repair Date', dataKey: 'repair_date_4' }
+            ];
+
+            // Add table to PDF
+            doc.autoTable({
+                head: [tableColumns.map(col => col.header)],
+                body: tableData,
+                startY: 35,
+                styles: { fontSize: 8 },
+                headStyles: { fillColor: [66, 139, 202] },
+                alternateRowStyles: { fillColor: [240, 240, 240] },
+                margin: { top: 35 }
+            });
+
+            // Add page numbers
+            const pageCount = doc.internal.getNumberOfPages();
+            for (let i = 1; i <= pageCount; i++) {
+                doc.setPage(i);
+                doc.setFontSize(8);
+                doc.text(`Page ${i} of ${pageCount}`, doc.internal.pageSize.width / 2,
+                    doc.internal.pageSize.height - 10, { align: 'center' });
+            }
+
+            // Save the PDF
+            const fileName = `Laptop_Users_Report_${new Date().toISOString().slice(0, 10)}.pdf`;
+            doc.save(fileName);
+
+        } catch (error) {
+            console.error('Error generating report:', error);
+            alert('Failed to generate report: ' + error.message);
+        }
+    }
 });
