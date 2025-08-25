@@ -1,4 +1,24 @@
 window.addEventListener('DOMContentLoaded', () => {
+
+    // Date formatting utility functions
+    function formatDate(dateString) {
+        if (!dateString || dateString === '') return '';
+        try {
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) return dateString;
+            return date.toLocaleDateString('en-GB', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
+        } catch (e) {
+            return dateString;
+        }
+    }
+
+
+
+
     const tbody = document.getElementById('printers-data-body');
     const createForm = document.getElementById('printersCreateForm');
     const createModal = document.getElementById('printersCreateModal');
@@ -26,7 +46,7 @@ window.addEventListener('DOMContentLoaded', () => {
             populateDivisionFilter(allRows); // Populate division filter with unique values
         } catch (error) {
             console.error('Error loading printers data:', error);
-            tbody.innerHTML = `<tr><td colspan="13" style="text-align:center; color:red;">Error loading data: ${error.message}</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="14" style="text-align:center; color:red;">Error loading data: ${error.message}</td></tr>`;
         }
     }
 
@@ -36,8 +56,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
         const divisions = new Set();
         rows.forEach(row => {
-            if (row['Division']) {
-                divisions.add(row['Division']);
+            if (row.division) {
+                divisions.add(row.division);
             }
         });
 
@@ -50,6 +70,8 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+
+
     // --- Render Table ---
     function renderTable(rows) {
         tbody.innerHTML = ''; // Clear existing rows
@@ -59,24 +81,25 @@ window.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        rows.forEach((row, idx) => {
+        rows.forEach((row) => {
             const tr = document.createElement('tr');
             tr.innerHTML = `
-                <td>${idx + 1}</td>
-                <td>${row['Brand & Model No'] || ''}</td>
-                <td>${row['S/N'] || ''}</td>
-                <td>${row['Division'] || ''}</td>
-                <td>${row['User'] || ''}</td>
-                <td>${row['PRN'] || ''}</td>
-                <td>${row['Year'] || ''}</td>
-                <td>${row['IP Address'] || ''}</td>
-                <td>${row['1st Repair Date'] || ''}</td>
-                <td>${row['2nd Repair Date'] || ''}</td>
-                <td>${row['3rd Repair Date'] || ''}</td>
-                <td>${row['4th Repair Date'] || ''}</td>
+                <td>${row.id}</td>
+                <td>${row.brand || ''}</td>
+                <td>${row.model || ''}</td>
+                <td>${row.sn || ''}</td>
+                <td>${row.division || ''}</td>
+                <td>${row.user || ''}</td>
+                <td>${row.prn || ''}</td>
+                <td>${row.year || ''}</td>
+                <td>${row.ip_address || ''}</td>
+                <td>${formatDate(row.repair_date_1)}</td>
+                <td>${formatDate(row.repair_date_2)}</td>
+                <td>${formatDate(row.repair_date_3)}</td>
+                <td>${formatDate(row.repair_date_4)}</td>
                 <td>
-                    <button class="edit-btn" data-sn="${row['S/N']}">Edit</button>
-                    <button class="delete-btn" data-sn="${row['S/N']}">Delete</button>
+                    <button class="edit-btn" data-id="${row.id}">Edit</button>
+                    <button class="delete-btn" data-id="${row.id}">Delete</button>
                 </td>
             `;
             tbody.appendChild(tr);
@@ -90,8 +113,8 @@ window.addEventListener('DOMContentLoaded', () => {
         const yearValue = yearFilter.value.trim(); // Use the yearFilter reference
 
         const filtered = allRows.filter(row => {
-            const rowDivision = (row.division || row['Division'] || '').toLowerCase();
-            const rowYear = (row.year || row['Year'] || '').toString();
+            const rowDivision = (row.division || '').toLowerCase();
+            const rowYear = (row.year || '').toString();
 
             const divisionMatch = !divisionValue || rowDivision === divisionValue;
             // Use .includes for year filter to allow partial matches (e.g., "202" matches "2023")
@@ -111,10 +134,10 @@ window.addEventListener('DOMContentLoaded', () => {
         // Delete functionality
         tbody.querySelectorAll('.delete-btn').forEach(btn => {
             btn.onclick = async () => {
-                const sn = btn.getAttribute('data-sn'); // Get S/N from data attribute
+                const id = btn.getAttribute('data-id'); // Get ID from data attribute
                 if (confirm('Are you sure you want to delete this record?')) {
                     try {
-                        await window.electronAPI.deletePrinter(sn); // Pass S/N to delete API
+                        await window.electronAPI.deletePrinter(id); // Pass ID to delete API
                         loadPrintersData(); // Reload data
                         alert('Printer deleted successfully!');
                     } catch (error) {
@@ -128,41 +151,42 @@ window.addEventListener('DOMContentLoaded', () => {
         // Edit functionality - Open Modal
         tbody.querySelectorAll('.edit-btn').forEach(btn => {
             btn.onclick = () => {
-                const sn = btn.getAttribute('data-sn'); // Get S/N from data attribute
-                // Find the full row data using the S/N
-                const printerToEdit = allRows.find(p => p['S/N'] == sn);
+                const id = btn.getAttribute('data-id'); // Get ID from data attribute
+                // Find the full row data using the ID
+                const printerToEdit = allRows.find(p => p.id == parseInt(id));
 
                 if (!printerToEdit) {
-                    console.error('Printer with S/N ' + sn + ' not found for editing.');
+                    console.error('Printer with ID ' + id + ' not found for editing.');
                     alert('Could not find printer data to edit.');
                     return;
                 }
 
                 // Populate the form fields in the edit modal
-                document.getElementById('printers-edit-no').value = printerToEdit['No'] || '';
-                document.getElementById('printers-edit-brand-model').value = printerToEdit['Brand & Model No'] || '';
-                document.getElementById('printers-edit-sn').value = printerToEdit['S/N'] || ''; // S/N is readonly
-                document.getElementById('printers-edit-division').value = printerToEdit['Division'] || '';
-                document.getElementById('printers-edit-user').value = printerToEdit['User'] || '';
-                document.getElementById('printers-edit-prn').value = printerToEdit['PRN'] || '';
-                document.getElementById('printers-edit-year').value = printerToEdit['Year'] || '';
-                document.getElementById('printers-edit-ip-address').value = printerToEdit['IP Address'] || '';
-                document.getElementById('printers-edit-repair-date-1').value = printerToEdit['1st Repair Date'] || '';
-                document.getElementById('printers-edit-repair-date-2').value = printerToEdit['2nd Repair Date'] || '';
-                document.getElementById('printers-edit-repair-date-3').value = printerToEdit['3rd Repair Date'] || '';
-                document.getElementById('printers-edit-repair-date-4').value = printerToEdit['4th Repair Date'] || '';
+                document.getElementById('printers-edit-no').value = printerToEdit.id || '';
+                document.getElementById('printers-edit-brand').value = printerToEdit.brand || '';
+                document.getElementById('printers-edit-model').value = printerToEdit.model || '';
+                document.getElementById('printers-edit-sn').value = printerToEdit.sn || ''; // S/N is readonly
+                document.getElementById('printers-edit-division').value = printerToEdit.division || '';
+                document.getElementById('printers-edit-user').value = printerToEdit.user || '';
+                document.getElementById('printers-edit-prn').value = printerToEdit.prn || '';
+                document.getElementById('printers-edit-year').value = printerToEdit.year || '';
+                document.getElementById('printers-edit-ip-address').value = printerToEdit.ip_address || '';
+                document.getElementById('printers-edit-repair-date-1').value = printerToEdit.repair_date_1 || '';
+                document.getElementById('printers-edit-repair-date-2').value = printerToEdit.repair_date_2 || '';
+                document.getElementById('printers-edit-repair-date-3').value = printerToEdit.repair_date_3 || '';
+                document.getElementById('printers-edit-repair-date-4').value = printerToEdit.repair_date_4 || '';
 
-                // Store the S/N in a data attribute on the modal for easy access on form submission
-                editModal.setAttribute('data-sn', sn);
-                editModal.style.display = 'flex'; // Show the modal
+                // Store the ID in a data attribute on the modal for easy access on form submission
+                editModal.setAttribute('data-id', id);
+                editModal.classList.add('show'); // Show the modal
             };
         });
     }
 
     // --- Create New Printer (Modal & Form) ---
-    createBtn.onclick = () => createModal.style.display = 'flex'; // Show create modal
+    createBtn.onclick = () => createModal.classList.add('show'); // Show create modal
     cancelCreate.onclick = () => { // Cancel create
-        createModal.style.display = 'none';
+        createModal.classList.remove('show');
         createForm.reset();
     };
 
@@ -172,22 +196,23 @@ window.addEventListener('DOMContentLoaded', () => {
 
         const newRecord = {
             // Ensure these keys match what your createPrinter Electron API expects (database column names)
-            'Brand & Model No': form.querySelector('input[name="brand_model"]').value.trim(),
-            'S/N': form.querySelector('input[name="sn"]').value.trim(),
-            'Division': form.querySelector('select[name="division"]').value,
-            'User': form.querySelector('input[name="user"]').value.trim(),
-            'PRN': form.querySelector('input[name="prn"]').value.trim(),
-            'Year': form.querySelector('input[name="year"]').value.trim(),
-            'IP Address': form.querySelector('input[name="ip_address"]').value.trim(),
-            '1st Repair Date': form.querySelector('input[name="repair_date_1"]').value || null,
-            '2nd Repair Date': form.querySelector('input[name="repair_date_2"]').value || null,
-            '3rd Repair Date': form.querySelector('input[name="repair_date_3"]').value || null,
-            '4th Repair Date': form.querySelector('input[name="repair_date_4"]').value || null
+            brand: form.querySelector('input[name="brand"]').value.trim(),
+            model: form.querySelector('input[name="model"]').value.trim(),
+            sn: form.querySelector('input[name="sn"]').value.trim(),
+            division: form.querySelector('select[name="division"]').value,
+            user: form.querySelector('input[name="user"]').value.trim(),
+            prn: form.querySelector('input[name="prn"]').value.trim(),
+            year: form.querySelector('input[name="year"]').value.trim(),
+            ip_address: form.querySelector('input[name="ip_address"]').value.trim(),
+            repair_date_1: form.querySelector('input[name="repair_date_1"]').value || null,
+            repair_date_2: form.querySelector('input[name="repair_date_2"]').value || null,
+            repair_date_3: form.querySelector('input[name="repair_date_3"]').value || null,
+            repair_date_4: form.querySelector('input[name="repair_date_4"]').value || null
         };
 
         try {
             await window.electronAPI.createPrinter(newRecord); // Call Electron API to create
-            createModal.style.display = 'none'; // Hide modal
+            createModal.classList.remove('show'); // Hide modal
             form.reset(); // Clear form
             loadPrintersData(); // Reload data to show new entry
             alert('Printer created successfully!');
@@ -199,34 +224,34 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // --- Edit Printer (Modal & Form) ---
     cancelEdit.onclick = () => { // Cancel edit
-        editModal.style.display = 'none';
+        editModal.classList.remove('show');
         editForm.reset();
     };
 
     editForm.onsubmit = async function (e) {
         e.preventDefault(); // Prevent default form submission
 
-        const targetSn = editModal.getAttribute('data-sn'); // Get the S/N stored on the modal
+        const targetId = editModal.getAttribute('data-id'); // Get the ID stored on the modal
 
         const updatedRecord = {
-            // Keys should match your database column names / Electron API expected format
-            'Brand & Model No': editForm.querySelector('input[name="brand_model"]').value.trim(),
-            // 'S/N' is readonly in the form, but we send it back as the identifier, not as an updatable field value
-            'Division': editForm.querySelector('select[name="division"]').value,
-            'User': editForm.querySelector('input[name="user"]').value.trim(),
-            'PRN': editForm.querySelector('input[name="prn"]').value.trim(),
-            'Year': editForm.querySelector('input[name="year"]').value.trim(),
-            'IP Address': editForm.querySelector('input[name="ip_address"]').value.trim(),
-            '1st Repair Date': editForm.querySelector('input[name="repair_date_1"]').value || null,
-            '2nd Repair Date': editForm.querySelector('input[name="repair_date_2"]').value || null,
-            '3rd Repair Date': editForm.querySelector('input[name="repair_date_3"]').value || null,
-            '4th Repair Date': editForm.querySelector('input[name="repair_date_4"]').value || null
+            brand: document.getElementById('printers-edit-brand').value.trim(),
+            model: document.getElementById('printers-edit-model').value.trim(),
+            sn: document.getElementById('printers-edit-sn').value.trim(),
+            division: editForm.querySelector('select[name="division"]').value,
+            user: editForm.querySelector('input[name="user"]').value.trim(),
+            prn: editForm.querySelector('input[name="prn"]').value.trim(),
+            year: editForm.querySelector('input[name="year"]').value.trim(),
+            ip_address: editForm.querySelector('input[name="ip_address"]').value.trim(),
+            repair_date_1: editForm.querySelector('input[name="repair_date_1"]').value || null,
+            repair_date_2: editForm.querySelector('input[name="repair_date_2"]').value || null,
+            repair_date_3: editForm.querySelector('input[name="repair_date_3"]').value || null,
+            repair_date_4: editForm.querySelector('input[name="repair_date_4"]').value || null
         };
 
         try {
-            // Pass the identifier (targetSn) and the updated data object
-            await window.electronAPI.updatePrinter(targetSn, updatedRecord);
-            editModal.style.display = 'none'; // Hide modal
+            // Pass the identifier (targetId) and the updated data object
+            await window.electronAPI.updatePrinter(targetId, updatedRecord);
+            editModal.classList.remove('show'); // Hide modal
             editForm.reset(); // Clear form
             loadPrintersData(); // Reload data to reflect changes
             alert('Printer updated successfully!');
@@ -245,4 +270,108 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // Initial load of data when the page loads
     loadPrintersData();
+
+    // Generate PDF report function
+    async function generateReport() {
+        try {
+            // Get the current filtered data
+            const divisionValue = document.getElementById('printers-division-filter').value.trim().toLowerCase();
+            const yearValue = document.getElementById('printers-year-filter').value.trim();
+
+            const filtered = allRows.filter(row => {
+                const divisionMatch = !divisionValue || (row.division || '').toLowerCase().includes(divisionValue);
+                const yearMatch = !yearValue || (row.year || '').toString().includes(yearValue);
+                return divisionMatch && yearMatch;
+            });
+
+            if (filtered.length === 0) {
+                alert('No data available to generate report!');
+                return;
+            }
+
+            // Create PDF document
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Add title
+            doc.setFontSize(16);
+            doc.text('Printers Report', 14, 15);
+            doc.setFontSize(10);
+            doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 14, 22);
+
+            // Add filter information if any filters are applied
+            let filterInfo = '';
+            if (divisionValue) {
+                filterInfo += `Division: ${divisionValue} `;
+            }
+            if (yearValue) {
+                filterInfo += `Year: ${yearValue}`;
+            }
+            if (filterInfo) {
+                doc.text(`Filters: ${filterInfo}`, 14, 29);
+            }
+
+            // Prepare table data
+            const tableData = filtered.map(row => [
+                row.id || '',
+                row.brand || '',
+                row.model || '',
+                row.sn || '',
+                row.division || '',
+                row.user || '',
+                row.prn || '',
+                row.year || '',
+                row.ip_address || '',
+                formatDate(row.repair_date_1) || '',
+                formatDate(row.repair_date_2) || '',
+                formatDate(row.repair_date_3) || '',
+                formatDate(row.repair_date_4) || ''
+            ]);
+
+            // Define table columns
+            const tableColumns = [
+                { header: 'No', dataKey: 'id' },
+                { header: 'Brand', dataKey: 'brand' },
+                { header: 'Model', dataKey: 'model' },
+                { header: 'S/N', dataKey: 'sn' },
+                { header: 'Division', dataKey: 'division' },
+                { header: 'User', dataKey: 'user' },
+                { header: 'PRN', dataKey: 'prn' },
+                { header: 'Year', dataKey: 'year' },
+                { header: 'IP Address', dataKey: 'ip_address' },
+                { header: '1st Repair Date', dataKey: 'repair_date_1' },
+                { header: '2nd Repair Date', dataKey: 'repair_date_2' },
+                { header: '3rd Repair Date', dataKey: 'repair_date_3' },
+                { header: '4th Repair Date', dataKey: 'repair_date_4' }
+            ];
+
+            // Add table to PDF
+            doc.autoTable({
+                head: [tableColumns.map(col => col.header)],
+                body: tableData,
+                startY: 35,
+                styles: { fontSize: 8 },
+                headStyles: { fillColor: [66, 139, 202] },
+                alternateRowStyles: { fillColor: [240, 240, 240] },
+                margin: { top: 35 }
+            });
+
+            // Add page numbers
+            const pageCount = doc.internal.getNumberOfPages();
+            for (let i = 1; i <= pageCount; i++) {
+                doc.setPage(i);
+                doc.setFontSize(8);
+                doc.text(`Page ${i} of ${pageCount}`, doc.internal.pageSize.width / 2,
+                    doc.internal.pageSize.height - 10, { align: 'center' });
+            }
+
+            // Save the PDF
+            const fileName = `Printers_Report_${new Date().toISOString().slice(0, 10)}.pdf`;
+            doc.save(fileName);
+
+        } catch (error) {
+            console.error('Error generating report:', error);
+            alert('Failed to generate report: ' + error.message);
+        }
+    }
 });

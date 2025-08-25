@@ -10,7 +10,8 @@ window.addEventListener('DOMContentLoaded', () => {
     const cancelCreate = document.getElementById('cancelCreate');
     const createForm = document.getElementById('createForm');
 
-    const newBrandModel = document.querySelector('input[name="brand_model"]');
+    const newBrand = document.querySelector('input[name="brand"]');
+    const newModel = document.querySelector('input[name="model"]');
     const newSN = document.querySelector('input[name="sn"]');
     const newPRN = document.querySelector('input[name="PRN"]');
     const newDivision = document.querySelector('select[name="Division"]');
@@ -64,7 +65,9 @@ window.addEventListener('DOMContentLoaded', () => {
         }
         let sql = `
             SELECT
-                \`Brand & Model No\` AS brand_model,
+               \`Brand \` As brand,,
+            \`Model No \` AS model,
+            \`S/N\` AS sn,
                 \`S/N\` AS sn,
                 \`PRN\` AS PRN,
                 \`Division\` AS Division,
@@ -98,13 +101,14 @@ window.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            rows.forEach((row, idx) => {
+            rows.forEach((row) => {
                 console.log('Row PRN:', row.PRN);
                 const tr = document.createElement('tr');
                 tr.dataset.sn = row.sn;
                 tr.innerHTML = `
-                    <td>${idx + 1}</td>
-                    <td>${row.brand_model}</td>
+                    <td>${row.id}</td>
+                    <td>${row.brand}</td>
+                    <td>${row.model}</td>
                     <td>${row.sn}</td>
                     <td>${row.PRN}</td>
                     <td>${row.Division}</td>
@@ -138,12 +142,13 @@ window.addEventListener('DOMContentLoaded', () => {
             tbody.innerHTML = `<tr><td colspan="12" style="text-align:center; color:gray;">No data found</td></tr>`;
             return;
         }
-        rows.forEach((row, idx) => {
+        rows.forEach((row) => {
             const tr = document.createElement('tr');
             tr.dataset.sn = row.sn;
             tr.innerHTML = `
-                <td>${idx + 1}</td>
-                <td>${row.brand_model || row["Brand & Model No"]}</td>
+                <td>${row.id}</td>
+                <td>${row.brand || row["Brand"]}</td>
+                <td>${row.model || row["Model No"]}</td>
                 <td>${row.sn || row["S/N"]}</td>
                 <td>${row.PRN}</td>
                 <td>${row.Division}</td>
@@ -201,17 +206,17 @@ window.addEventListener('DOMContentLoaded', () => {
         const cells = tr.querySelectorAll('td');
         const original = [...cells].map(td => td.innerHTML);
 
-        cells.forEach((td, idx) => {
-            if (idx === 2) return; // S/N read only
-            if (idx === 12) { // Actions column
+        cells.forEach((td, id) => {
+            if (id === 2) return; // S/N read only
+            if (id === 12) { // Actions column
                 td.innerHTML = `
                     <button class="save-btn">Save</button>
                     <button class="cancel-btn">Cancel</button>`;
-            } else if (idx >= 8 && idx <= 11) {
+            } else if (id >= 8 && id <= 11) {
                 const val = td.textContent.trim();
                 // Only show date if value is in YYYY-MM-DD format
                 td.innerHTML = `<input type="date" value="${/^[\d]{4}-[\d]{2}-[\d]{2}$/.test(val) ? val : ''}" />`;
-            } else if (idx === 4) { // Division column (select)
+            } else if (id === 4) { // Division column (select)
                 const val = td.textContent.trim();
                 td.innerHTML = `
                     <select>
@@ -222,7 +227,7 @@ window.addEventListener('DOMContentLoaded', () => {
                         <option value="Export" ${val === 'Export' ? 'selected' : ''}>Export</option>
                         <option value="Finance" ${val === 'Finance' ? 'selected' : ''}>Finance</option>
                     </select>`;
-            } else if (idx !== 0) { // No column is not editable
+            } else if (id !== 0) { // No column is not editable
                 td.innerHTML = `<input type="text" value="${td.textContent.trim()}" />`;
             }
         });
@@ -245,7 +250,8 @@ window.addEventListener('DOMContentLoaded', () => {
         actionTd.querySelector('.save-btn').onclick = async () => {
             const inputs = tr.querySelectorAll('td > input, td > select');
             const updated = {
-                brand_model: inputs[0].value.trim(),      // Brand & Model No
+                brand: inputs[0].value.trim(),
+                model: inputs[0].value.trim(),
                 sn: cells[2].textContent.trim(),          // S/N
                 PRN: inputs[1].value.trim(),              // PRN
                 Division: inputs[2].value,                // Division
@@ -298,7 +304,8 @@ window.addEventListener('DOMContentLoaded', () => {
     createForm.onsubmit = async e => {
         e.preventDefault();
         const newRecord = {
-            brand_model: newBrandModel.value.trim(),
+            brand: newBrand.value.trim(),
+            model: newModel.value.trim(),
             sn: newSN.value.trim(),
             PRN: newPRN.value.trim(),
             Division: newDivision.value,
@@ -349,11 +356,12 @@ window.addEventListener('DOMContentLoaded', () => {
                 tbody.innerHTML = `<tr><td colspan="12" style="text-align:center; color:gray;">No data found</td></tr>`;
                 return;
             }
-            rows.forEach((row, idx) => {
+            rows.forEach((row, id) => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td>${idx + 1}</td>
-                    <td>${row['Brand & Model No'] || ''}</td>
+                    <td>${row.id}</td>
+                    <td>${row['Brand '] || ''}</td>
+                     <td>${row['Model No'] || ''}</td>
                     <td>${row['S/N'] || ''}</td>
                     <td>${row['Division'] || ''}</td>
                     <td>${row['User'] || ''}</td>
@@ -396,7 +404,8 @@ window.addEventListener('DOMContentLoaded', () => {
         createForm.onsubmit = async e => {
             e.preventDefault();
             const newRecord = {
-                brand_model: createForm.querySelector('input[name="brand_model"]').value.trim(),
+                brand: createForm.querySelector('input[name="brand"]').value.trim(),
+                model: createForm.querySelector('input[name="model"]').value.trim(),
                 sn: createForm.querySelector('input[name="sn"]').value.trim(),
                 Division: createForm.querySelector('select[name="division"]').value,
                 User: createForm.querySelector('input[name="user"]').value.trim(),
