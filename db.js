@@ -167,7 +167,27 @@ function deleteDesktop(id) {
 
 
 
-// LaptopUsers
+function getLaptopComputers() {
+    return query(`
+        SELECT 
+            idlaptop AS id, 
+            SN AS sn, 
+            Brand AS brand, 
+            Model AS model,
+            Division AS division, 
+            User AS user, 
+            PRN AS prn, 
+            Year AS year, 
+            \`1st Repair Date\` AS repair_date_1,
+            \`2nd Repair Date\` AS repair_date_2,
+            \`3rd Repair Date\` AS repair_date_3,
+            \`4th Repair Date\` AS repair_date_4
+        FROM laptop_users
+    `).catch(err => {
+        console.error('Error in getLaptopComputers:', err);
+        throw err;
+    });
+}
 
 function getLaptopUsers() {
     return query('SELECT idlaptop AS id, `SN` as sn, `Division` as division, `User` as user, `PRN` as prn, `Year` as year, `1st Repair Date` AS repair_date_1, `2nd Repair Date` AS repair_date_2, `3rd Repair Date` AS repair_date_3, `4th Repair Date` AS repair_date_4 FROM laptop_users').catch(err => {
