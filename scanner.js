@@ -18,6 +18,18 @@ window.addEventListener('DOMContentLoaded', () => {
         renderTable(rows);
     }
 
+    // Function to format dates for display
+    function formatDate(dateValue) {
+        if (!dateValue) return '';
+        try {
+            const date = new Date(dateValue);
+            if (isNaN(date.getTime())) return dateValue; // Return original if invalid date
+            return date.toLocaleDateString('en-GB'); // Format as DD/MM/YYYY
+        } catch (error) {
+            return dateValue; // Return original if error
+        }
+    }
+
     // Function to render the table with scanner data
     function renderTable(rows) {
         tbody.innerHTML = '';
@@ -25,23 +37,24 @@ window.addEventListener('DOMContentLoaded', () => {
             tbody.innerHTML = `<tr><td colspan="12" style="text-align:center; color:gray;">No data found</td></tr>`;
             return;
         }
-        rows.forEach((row, idx) => {
+        rows.forEach((row) => {
             const tr = document.createElement('tr');
             tr.innerHTML = `
-                <td>${idx + 1}</td>
-                <td>${row['Brand & Model No'] || ''}</td>
-                <td>${row['S/N'] || ''}</td>
-                <td>${row['Division'] || ''}</td>
-                <td>${row['User'] || ''}</td>
-                <td>${row['PRN'] || ''}</td>
-                <td>${row['YEAR'] || row['Year'] || ''}</td>
-                <td>${row['1st Repair Date'] || ''}</td>
-                <td>${row['2nd Repair Date'] || ''}</td>
-                <td>${row['3rd Repair Date'] || ''}</td>
-                <td>${row['4th Repair Date'] || ''}</td>
+                <td>${row.id}</td>
+                <td>${row.brand || ''}</td>
+                <td>${row.model || ''}</td>
+                <td>${row.sn || ''}</td>
+                <td>${row.division || ''}</td>
+                <td>${row.user || ''}</td>
+                <td>${row.prn || ''}</td>
+                <td>${row.year || ''}</td>
+                <td>${formatDate(row.repair_date_1)}</td>
+                <td>${formatDate(row.repair_date_2)}</td>
+                <td>${formatDate(row.repair_date_3)}</td>
+                <td>${formatDate(row.repair_date_4)}</td>
                 <td>
-                    <button class="edit-btn" data-sn="${row['S/N']}">Edit</button>
-                    <button class="delete-btn" data-sn="${row['S/N']}">Delete</button>
+                    <button class="edit-btn" data-id="${row.id}">Edit</button>
+                    <button class="delete-btn" data-id="${row.id}">Delete</button>
                 </td>
             `;
             tbody.appendChild(tr);
@@ -69,33 +82,35 @@ window.addEventListener('DOMContentLoaded', () => {
     function attachScannerEventListeners() {
         tbody.querySelectorAll('.delete-btn').forEach(btn => {
             btn.onclick = async e => {
-                const sn = btn.getAttribute('data-sn');
+                const id = btn.getAttribute('data-id');
                 if (confirm('Are you sure you want to delete this record?')) {
-                    await window.electronAPI.deleteScanner(sn);
+                    await window.electronAPI.deleteScanner(id);
                     loadScannerData();
                 }
             };
         });
 
         tbody.querySelectorAll('.edit-btn').forEach(btn => {
-            btn.onclick = async e => {
-                const snToEdit = btn.getAttribute('data-sn');
-                const scannerToEdit = allRows.find(row => row['S/N'] === snToEdit);
+            btn.onclick = () => {
+                const idToEdit = btn.getAttribute('data-id');
+                const row = allRows.find(row => row.id == idToEdit);
 
-                if (scannerToEdit) {
-                    document.getElementById('scanner-edit-sn').value = scannerToEdit['S/N'] || '';
-                    document.getElementById('scanner-edit-brand-model').value = scannerToEdit['Brand & Model No'] || '';
-                    document.getElementById('scanner-edit-division').value = scannerToEdit['Division'] || '';
-                    document.getElementById('scanner-edit-user').value = scannerToEdit['User'] || '';
-                    document.getElementById('scanner-edit-prn').value = scannerToEdit['PRN'] || '';
-                    document.getElementById('scanner-edit-year').value = scannerToEdit['YEAR'] || scannerToEdit['Year'] || '';
-                    document.getElementById('scanner-edit-repair-date-1').value = scannerToEdit['1st Repair Date'] || '';
-                    document.getElementById('scanner-edit-repair-date-2').value = scannerToEdit['2nd Repair Date'] || '';
-                    document.getElementById('scanner-edit-repair-date-3').value = scannerToEdit['3rd Repair Date'] || '';
-                    document.getElementById('scanner-edit-repair-date-4').value = scannerToEdit['4th Repair Date'] || '';
+                if (!row) return;
+                document.getElementById('scanner-edit-sn').value = row.sn || '';
+                document.getElementById('scanner-edit-brand').value = row.brand || '';
+                document.getElementById('scanner-edit-model').value = row.model || '';
+                document.getElementById('scanner-edit-division').value = row.division || '';
+                document.getElementById('scanner-edit-user').value = row.user || '';
+                document.getElementById('scanner-edit-prn').value = row.prn || '';
+                document.getElementById('scanner-edit-year').value = row.year || '';
+                document.getElementById('scanner-edit-repair-date-1').value = row.repair_date_1 || '';
+                document.getElementById('scanner-edit-repair-date-2').value = row.repair_date_2 || '';
+                document.getElementById('scanner-edit-repair-date-3').value = row.repair_date_3 || '';
+                document.getElementById('scanner-edit-repair-date-4').value = row.repair_date_4 || '';
 
-                    editModal.style.display = 'flex';
-                }
+                const editModal = document.getElementById('scannerEditModal');
+                editModal.setAttribute('data-id', idToEdit);
+                editModal.style.display = 'flex'; // Store id in modal attribute for update reference
             };
         });
     }
@@ -115,7 +130,8 @@ window.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         const row = {
             sn: document.getElementById('scanner-new-sn').value,
-            'Brand & Model No': document.getElementById('scanner-new-brand-model').value, // Added this field
+            brand: document.getElementById('scanner-new-brand').value,
+            model: document.getElementById('scanner-new-model').value,
             division: document.getElementById('scanner-new-division').value,
             user: document.getElementById('scanner-new-user').value,
             prn: document.getElementById('scanner-new-prn').value,
@@ -143,34 +159,40 @@ window.addEventListener('DOMContentLoaded', () => {
     };
 
     // Handle Edit Form submission
-    editForm.onsubmit = async e => {
+    document.getElementById('scannerEditForm').onsubmit = async function (e) {
         e.preventDefault();
+        const editModal = document.getElementById('scannerEditModal');
+        const id = editModal.getAttribute('data-id'); // ✅ Get the stored ID
+
         const updatedScanner = {
-            originalSn: document.getElementById('scanner-edit-sn').value, // Use this for identifying the record
-            'S/N': document.getElementById('scanner-edit-sn').value,
-            'Brand & Model No': document.getElementById('scanner-edit-brand-model').value,
-            Division: document.getElementById('scanner-edit-division').value,
-            User: document.getElementById('scanner-edit-user').value,
-            PRN: document.getElementById('scanner-edit-prn').value,
-            Year: document.getElementById('scanner-edit-year').value,
-            '1st Repair Date': document.getElementById('scanner-edit-repair-date-1').value,
-            '2nd Repair Date': document.getElementById('scanner-edit-repair-date-2').value,
-            '3rd Repair Date': document.getElementById('scanner-edit-repair-date-3').value,
-            '4th Repair Date': document.getElementById('scanner-edit-repair-date-4').value
+            id: id, // Include ID for update
+            sn: document.getElementById('scanner-edit-sn').value,
+            brand: document.getElementById('scanner-edit-brand').value,
+            model: document.getElementById('scanner-edit-model').value,
+            division: document.getElementById('scanner-edit-division').value,
+            user: document.getElementById('scanner-edit-user').value,
+            prn: document.getElementById('scanner-edit-prn').value,
+            year: document.getElementById('scanner-edit-year').value,
+            repair_date_1: document.getElementById('scanner-edit-repair-date-1').value,
+            repair_date_2: document.getElementById('scanner-edit-repair-date-2').value,
+            repair_date_3: document.getElementById('scanner-edit-repair-date-3').value,
+            repair_date_4: document.getElementById('scanner-edit-repair-date-4').value
         };
 
         try {
-            // Assuming your updateScanner function takes the original S/N and the updated data
-            await window.electronAPI.updateScanner(updatedScanner.originalSn, updatedScanner);
+            await window.electronAPI.updateScanner(updatedScanner);
             alert('Scanner updated successfully!');
             editModal.style.display = 'none';
             editForm.reset();
-            loadScannerData(); // Reload data to show updated entry
+            loadScannerData();
         } catch (err) {
+            console.error('Failed to update scanner:', err);
             alert('Error updating scanner: ' + err.message);
         }
     };
 
+
     // Initial load of data
     loadScannerData();
+
 });

@@ -14,12 +14,29 @@
         <div class="filters">
             <label for="scanner-division-filter">Division:
                 <select id="scanner-division-filter">
-                    <option value="">All</option>
+                    <option value="">Select Division</option>
+                    <option value="">Select Division</option>
                     <option value="IT">IT</option>
                     <option value="admin">admin</option>
                     <option value="Lab">Lab</option>
                     <option value="Export">Export</option>
                     <option value="Finance">Finance</option>
+                    <option value="Baduraliya">Baduraliya R\O</option>
+                    <option value="Galle">Galle R\O</option>
+                    <option value="Gov.Audit">Gov.Audit</option>
+                    <option value="Internal">Internal Audit</option>
+                    <option value="Matara">Matara R\O</option>
+                    <option value="Nuwaraeliya">Nuwaraeliya R\O</option>
+                    <option value="Procurement">Procurement</option>
+                    <option value="Promotion">Promotion</option>
+                    <option value="Rathnapura">Rathnapura R\O</option>
+                    <option value="Sales">Sales Counter</option>
+                    <option value="Secretary">Secretary</option>
+                    <option value="Stat">Stat</option>
+                    <option value="Stores">Stores</option>
+                    <option value="TCD">TCD</option>
+                    <option value="Tea">Tea Testing</option>
+                    <option value="Gampola"> Gampola R.office</option>
                 </select>
             </label>
             <label for="scanner-year-filter">Year:
@@ -32,7 +49,8 @@
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>Brand & Model No</th>
+                        <th>Brand</th>
+                        <th>Model No</th>
                         <th>S/N</th>
                         <th>Division</th>
                         <th>User</th>
@@ -62,8 +80,12 @@
                             <input type="text" id="scanner-new-sn" required>
                         </div>
                         <div>
-                            <label for="scanner-new-brand-model">Brand & Model No:</label>
-                            <input type="text" id="scanner-new-brand-model">
+                            <label for="scanner-new-brand">Brand:</label>
+                            <input type="text" id="scanner-new-brand">
+                        </div>
+                        <div>
+                            <label for="scanner-new-model">Model:</label>
+                            <input type="text" id="scanner-new-model">
                         </div>
                     </div>
                     <div class="input-row">
@@ -84,11 +106,28 @@
                             <label for="scanner-new-division">Division:</label>
                             <select id="scanner-new-division" required>
                                 <option value="">Select Division</option>
+                                <option value="">Select Division</option>
                                 <option value="IT">IT</option>
-                                <option value="Admin">Admin</option>
+                                <option value="admin">admin</option>
                                 <option value="Lab">Lab</option>
                                 <option value="Export">Export</option>
                                 <option value="Finance">Finance</option>
+                                <option value="Baduraliya">Baduraliya R\O</option>
+                                <option value="Galle">Galle R\O</option>
+                                <option value="Gov.Audit">Gov.Audit</option>
+                                <option value="Internal">Internal Audit</option>
+                                <option value="Matara">Matara R\O</option>
+                                <option value="Nuwaraeliya">Nuwaraeliya R\O</option>
+                                <option value="Procurement">Procurement</option>
+                                <option value="Promotion">Promotion</option>
+                                <option value="Rathnapura">Rathnapura R\O</option>
+                                <option value="Sales">Sales Counter</option>
+                                <option value="Secretary">Secretary</option>
+                                <option value="Stat">Stat</option>
+                                <option value="Stores">Stores</option>
+                                <option value="TCD">TCD</option>
+                                <option value="Tea">Tea Testing</option>
+                                <option value="Gampola"> Gampola R.office</option>
                             </select>
                         </div>
                         <div>
@@ -136,11 +175,15 @@
                     <div class="input-row">
                         <div>
                             <label for="scanner-edit-sn">S/N:</label>
-                            <input type="text" name="sn" id="scanner-edit-sn" required readonly />
+                            <input type="text" name="sn" id="scanner-edit-sn" />
                         </div>
                         <div>
-                            <label for="scanner-edit-brand-model">Brand & Model No:</label>
-                            <input type="text" name="brand_model" id="scanner-edit-brand-model" />
+                            <label for="scanner-edit-brand">Brand:</label>
+                            <input type="text" name="brand" id="scanner-edit-brand" />
+                        </div>
+                        <div>
+                            <label for="scanner-edit-model">Model:</label>
+                            <input type="text" name="model" id="scanner-edit-model" />
                         </div>
                     </div>
                     <div class="input-row">
@@ -162,11 +205,28 @@
                             <label for="scanner-edit-division">Division:</label>
                             <select name="division" id="scanner-edit-division" required>
                                 <option value="">Select Division</option>
+                                <option value="">Select Division</option>
                                 <option value="IT">IT</option>
                                 <option value="admin">admin</option>
                                 <option value="Lab">Lab</option>
                                 <option value="Export">Export</option>
                                 <option value="Finance">Finance</option>
+                                <option value="Baduraliya">Baduraliya R\O</option>
+                                <option value="Galle">Galle R\O</option>
+                                <option value="Gov.Audit">Gov.Audit</option>
+                                <option value="Internal">Internal Audit</option>
+                                <option value="Matara">Matara R\O</option>
+                                <option value="Nuwaraeliya">Nuwaraeliya R\O</option>
+                                <option value="Procurement">Procurement</option>
+                                <option value="Promotion">Promotion</option>
+                                <option value="Rathnapura">Rathnapura R\O</option>
+                                <option value="Sales">Sales Counter</option>
+                                <option value="Secretary">Secretary</option>
+                                <option value="Stat">Stat</option>
+                                <option value="Stores">Stores</option>
+                                <option value="TCD">TCD</option>
+                                <option value="Tea">Tea Testing</option>
+                                <option value="Gampola"> Gampola R.office</option>
                             </select>
                         </div>
                         <div>

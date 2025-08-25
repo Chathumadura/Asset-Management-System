@@ -124,6 +124,7 @@ h1 {
 }
 
 .filters button,
+#generateReportBtn,
 .form-actions button {
   background: #4e54c8;
   color: #fff;
@@ -719,6 +720,13 @@ button {
   border-color: #4e54c8;
   box-shadow: 0 0 0 2px #4e54c855;
   transition: box-shadow 0.2s;
+}
+
+
+
+#upsCreateModal.modal[style*="display: flex"],
+#upsEditModal.modal[style*="display: flex"] {
+  display: flex !important;
 }
 
 .create-btn,
