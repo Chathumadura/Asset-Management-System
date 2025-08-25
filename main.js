@@ -1,3 +1,4 @@
+
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const db = require('./db'); // Assuming db.js contains your database logic
@@ -6,6 +7,7 @@ function createWindow() {
     const win = new BrowserWindow({
         width: 1200,
         height: 900,
+
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
             contextIsolation: true,
@@ -15,6 +17,7 @@ function createWindow() {
 
     win.loadFile('index.html');
 }
+
 
 app.whenReady().then(createWindow);
 
@@ -124,9 +127,9 @@ ipcMain.handle('create-laptop-user', async (event, row) => {
     }
 });
 
-ipcMain.handle('delete-laptop-user', async (event, sn) => {
+ipcMain.handle('delete-laptop-user', async (event, id) => {
     try {
-        return await db.deleteLaptopUser(sn);
+        return await db.deleteLaptopUser(id);
     } catch (err) {
         console.error('Error in delete-laptop-user:', err);
         throw err;
@@ -171,9 +174,9 @@ ipcMain.handle('update-scanner', async (event, row) => {
     }
 });
 
-ipcMain.handle('delete-scanner', async (event, sn) => {
+ipcMain.handle('delete-scanner', async (event, id) => {
     try {
-        return await db.deleteScanner(sn);
+        return await db.deleteScanner(id);
     } catch (err) {
         console.error('Error in delete-scanner:', err);
         throw err;
@@ -199,11 +202,20 @@ ipcMain.handle('create-ups', async (event, row) => {
     }
 });
 
-ipcMain.handle('delete-ups', async (event, sn) => {
+ipcMain.handle('delete-ups', async (event, id) => {
     try {
-        return await db.deleteUPS(sn);
+        return await db.deleteUPS(id);
     } catch (err) {
         console.error('Error in delete-ups:', err);
+        throw err;
+    }
+});
+
+ipcMain.handle('update-ups', async (event, id, row) => {
+    try {
+        return await db.updateUPS(id, row);
+    } catch (err) {
+        console.error('Error in update-ups:', err);
         throw err;
     }
 });
@@ -227,9 +239,9 @@ ipcMain.handle('create-printer', async (event, row) => {
     }
 });
 
-ipcMain.handle('delete-printer', async (event, sn) => {
+ipcMain.handle('delete-printer', async (event, id) => {
     try {
-        return await db.deletePrinter(sn);
+        return await db.deletePrinter(id);
     } catch (err) {
         console.error('Error in delete-printer:', err);
         throw err;
@@ -246,21 +258,23 @@ ipcMain.handle('get-photocopy', async () => {
     }
 });
 
-ipcMain.handle('create-photocopy', async (event, row) => {
+ipcMain.handle('update-photocopy', async (event, id, row) => {
     try {
-        return await db.createPhotocopy(row);
+        return await db.updatePhotocopy(id, row);
     } catch (err) {
-        console.error('Error in create-photocopy:', err);
+        console.error('Error in update-photocopy:', err);
         throw err;
     }
 });
 
-ipcMain.handle('delete-photocopy', async (event, sn) => {
+ipcMain.handle('delete-photocopy', async (event, id) => {
     try {
-        return await db.deletePhotocopy(sn);
+        return await db.deletePhotocopy(id);
     } catch (err) {
         console.error('Error in delete-photocopy:', err);
         throw err;
     }
 });
+
+
 
