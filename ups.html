@@ -5,11 +5,16 @@
     <meta charset="UTF-8" />
     <title>UPS</title>
     <link rel="stylesheet" href="style.css" />
+    <!-- jsPDF library for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- jsPDF AutoTable plugin for table generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 </head>
 
 <body>
     <div class="container">
         <h1>UPS</h1>
+        <button id="generateReportBtn">Generate Report</button>
         <button id="upsBackBtn">Back</button>
         <div class="filters">
             <label for="ups-division-filter">Division:
@@ -284,6 +289,10 @@
         // Add event listener for cancel button in edit modal
         document.getElementById('ups-cancelEdit').addEventListener('click', function () {
             document.getElementById('upsEditModal').style.display = 'none';
+        });
+        // Add event listener for generate report button
+        document.getElementById('generateReportBtn').addEventListener('click', async () => {
+            // Logic to generate the report will be implemented here
         });
     </script>
 </body>
