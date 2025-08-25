@@ -14,12 +14,29 @@
         <div class="filters">
             <label for="ups-division-filter">Division:
                 <select id="ups-division-filter">
+                    <option value="">Select Division</option>
                     <option value="">All</option>
                     <option value="IT">IT</option>
                     <option value="admin">admin</option>
                     <option value="Lab">Lab</option>
                     <option value="Export">Export</option>
                     <option value="Finance">Finance</option>
+                    <option value="Baduraliya">Baduraliya R\O</option>
+                    <option value="Galle">Galle R\O</option>
+                    <option value="Gov.Audit">Gov.Audit</option>
+                    <option value="Internal">Internal Audit</option>
+                    <option value="Matara">Matara R\O</option>
+                    <option value="Nuwaraeliya">Nuwaraeliya R\O</option>
+                    <option value="Procurement">Procurement</option>
+                    <option value="Promotion">Promotion</option>
+                    <option value="Rathnapura">Rathnapura R\O</option>
+                    <option value="Sales">Sales Counter</option>
+                    <option value="Secretary">Secretary</option>
+                    <option value="Stat">Stat</option>
+                    <option value="Stores">Stores</option>
+                    <option value="TCD">TCD</option>
+                    <option value="Tea">Tea Testing</option>
+                    <option value="Gampola"> Gampola R.office</option>
                 </select>
             </label>
             <label for="ups-year-filter">Year:
@@ -32,7 +49,8 @@
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>Brand & Model No</th>
+                        <th>Brand</th>
+                        <th>Model No</th>
                         <th>S/N</th>
                         <th>Division</th>
                         <th>User</th>
@@ -50,7 +68,7 @@
             </table>
         </div>
     </div>
-    <div id="upsCreateModal" class="modal">
+    <div id="upsCreateModal" class="modal" data-id="" style="display:none;">
         <div class="modal-content">
             <h2>Add New UPS</h2>
             <form id="upsCreateForm">
@@ -58,79 +76,94 @@
                     <h3>General Details</h3>
                     <div class="input-row">
                         <div>
-                            <label for="ups-new-no">No:</label>
-                            <input type="text" name="no" id="ups-new-no" disabled placeholder="Auto" />
+                            <label for="ups-new-no">No</label>
+                            <input id="ups-new-no" name="no" type="text" readonly />
+                            <div>
+                                <label for="ups-new-brand">Brand:</label>
+                                <input type="text" name="brand" id="ups-new-brand" required />
+                                <label for="ups-new-model">Model No:</label>
+                                <input type="text" name="model" id="ups-new-model" required />
+                            </div>
+                            <div>
+                                <label for="ups-new-sn">S/N:</label>
+                                <input type="text" name="sn" id="ups-new-sn" required />
+                            </div>
                         </div>
-                        <div>
-                            <label for="ups-new-brand-model">Brand & Model No:</label>
-                            <input type="text" name="brand_model" id="ups-new-brand-model" required />
-                        </div>
-                    </div>
-                    <div class="input-row">
-                        <div>
-                            <label for="ups-new-sn">S/N:</label>
-                            <input type="text" name="sn" id="ups-new-sn" required />
-                        </div>
-                        <div>
-                            <label for="ups-new-prn">PRN:</label>
-                            <input type="text" name="prn" id="ups-new-prn" />
-                        </div>
-                    </div>
-                    <div class="input-row">
-                        <div>
-                            <label for="ups-new-year">Year:</label>
-                            <input type="text" name="year" id="ups-new-year" />
-                        </div>
-                        <div></div>
-                    </div>
-                </div>
-                <div class="form-section">
-                    <h3>Assignment</h3>
-                    <div class="input-row">
-                        <div>
-                            <label for="ups-new-division">Division:</label>
-                            <select name="division" id="ups-new-division" required>
-                                <option value="">Select Division</option>
-                                <option value="IT">IT</option>
-                                <option value="admin">admin</option>
-                                <option value="Lab">Lab</option>
-                                <option value="Export">Export</option>
-                                <option value="Finance">Finance</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label for="ups-new-user">User:</label>
-                            <input type="text" name="user" id="ups-new-user" />
+                        <div class="input-row">
+                            <div>
+                                <label for="ups-new-prn">PRN:</label>
+                                <input type="text" name="prn" id="ups-new-prn" />
+                            </div>
+                            <div>
+                                <label for="ups-new-year">Year:</label>
+                                <input type="text" name="year" id="ups-new-year" />
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="form-section">
-                    <h3>Repair History</h3>
-                    <div class="input-row">
-                        <div>
-                            <label for="ups-new-repair-date-1">1st Repair Date:</label>
-                            <input type="date" name="repair_date_1" id="ups-new-repair-date-1" />
-                        </div>
-                        <div>
-                            <label for="ups-new-repair-date-2">2nd Repair Date:</label>
-                            <input type="date" name="repair_date_2" id="ups-new-repair-date-2" />
+                    <div class="form-section">
+                        <h3>Assignment</h3>
+                        <div class="input-row">
+                            <div>
+                                <label for="ups-new-division">Division:</label>
+                                <select name="division" id="ups-new-division" required>
+                                    <option value="">Select Division</option>
+                                    <option value="">All</option>
+                                    <option value="IT">IT</option>
+                                    <option value="admin">admin</option>
+                                    <option value="Lab">Lab</option>
+                                    <option value="Export">Export</option>
+                                    <option value="Finance">Finance</option>
+                                    <option value="Baduraliya">Baduraliya R\O</option>
+                                    <option value="Galle">Galle R\O</option>
+                                    <option value="Gov.Audit">Gov.Audit</option>
+                                    <option value="Internal">Internal Audit</option>
+                                    <option value="Matara">Matara R\O</option>
+                                    <option value="Nuwaraeliya">Nuwaraeliya R\O</option>
+                                    <option value="Procurement">Procurement</option>
+                                    <option value="Promotion">Promotion</option>
+                                    <option value="Rathnapura">Rathnapura R\O</option>
+                                    <option value="Sales">Sales Counter</option>
+                                    <option value="Secretary">Secretary</option>
+                                    <option value="Stat">Stat</option>
+                                    <option value="Stores">Stores</option>
+                                    <option value="TCD">TCD</option>
+                                    <option value="Tea">Tea Testing</option>
+                                    <option value="Gampola"> Gampola R.office</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="ups-new-user">User:</label>
+                                <input type="text" name="user" id="ups-new-user" />
+                            </div>
                         </div>
                     </div>
-                    <div class="input-row">
-                        <div>
-                            <label for="ups-new-repair-date-3">3rd Repair Date:</label>
-                            <input type="date" name="repair_date_3" id="ups-new-repair-date-3" />
+                    <div class="form-section">
+                        <h3>Repair History</h3>
+                        <div class="input-row">
+                            <div>
+                                <label for="ups-new-repair1">1st Repair Date:</label>
+                                <input type="date" name="repair_date_1" id="ups-new-repair1" />
+                            </div>
+                            <div>
+                                <label for="ups-new-repair2">2nd Repair Date:</label>
+                                <input type="date" name="repair_date_2" id="ups-new-repair2" />
+                            </div>
                         </div>
-                        <div>
-                            <label for="ups-new-repair-date-4">4th Repair Date:</label>
-                            <input type="date" name="repair_date_4" id="ups-new-repair-date-4" />
+                        <div class="input-row">
+                            <div>
+                                <label for="ups-new-repair3">3rd Repair Date:</label>
+                                <input type="date" name="repair_date_3" id="ups-new-repair3" />
+                            </div>
+                            <div>
+                                <label for="ups-new-repair4">4th Repair Date:</label>
+                                <input type="date" name="repair_date_4" id="ups-new-repair4" />
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="form-actions">
-                    <button type="submit" class="create-btn">Create</button>
-                    <button type="button" class="cancel-btn" id="ups-cancelCreate">Cancel</button>
-                </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="create-btn">Create</button>
+                            <button type="button" class="cancel-btn" id="ups-cancelCreate">Cancel</button>
+                        </div>
             </form>
         </div>
     </div>
@@ -142,30 +175,30 @@
                     <h3>General Details</h3>
                     <div class="input-row">
                         <div>
-                            <label for="ups-edit-no">No:</label>
-                            <input type="text" name="no" id="ups-edit-no" disabled placeholder="Auto" />
+                            <label for="ups-edit-no">No</label>
+                            <input id="ups-edit-no" type="text" readonly />
                         </div>
+
                         <div>
-                            <label for="ups-edit-brand-model">Brand & Model No:</label>
-                            <input type="text" name="brand_model" id="ups-edit-brand-model" required />
+                            <label for="ups-edit-brand">Brand:</label>
+                            <input type="text" name="brand" id="ups-edit-brand" required />
+                            <label for="ups-edit-model">Model No:</label>
+                            <input type="text" name="model" id="ups-edit-model" required />
                         </div>
-                    </div>
-                    <div class="input-row">
                         <div>
                             <label for="ups-edit-sn">S/N:</label>
                             <input type="text" name="sn" id="ups-edit-sn" required readonly />
                         </div>
+                    </div>
+                    <div class="input-row">
                         <div>
                             <label for="ups-edit-prn">PRN:</label>
                             <input type="text" name="prn" id="ups-edit-prn" />
                         </div>
-                    </div>
-                    <div class="input-row">
                         <div>
                             <label for="ups-edit-year">Year:</label>
                             <input type="text" name="year" id="ups-edit-year" />
                         </div>
-                        <div></div>
                     </div>
                 </div>
                 <div class="form-section">
@@ -175,11 +208,28 @@
                             <label for="ups-edit-division">Division:</label>
                             <select name="division" id="ups-edit-division" required>
                                 <option value="">Select Division</option>
+                                <option value="">ALL</option>
                                 <option value="IT">IT</option>
                                 <option value="admin">admin</option>
                                 <option value="Lab">Lab</option>
                                 <option value="Export">Export</option>
                                 <option value="Finance">Finance</option>
+                                <option value="Baduraliya">Baduraliya R\O</option>
+                                <option value="Galle">Galle R\O</option>
+                                <option value="Gov.Audit">Gov.Audit</option>
+                                <option value="Internal">Internal Audit</option>
+                                <option value="Matara">Matara R\O</option>
+                                <option value="Nuwaraeliya">Nuwaraeliya R\O</option>
+                                <option value="Procurement">Procurement</option>
+                                <option value="Promotion">Promotion</option>
+                                <option value="Rathnapura">Rathnapura R\O</option>
+                                <option value="Sales">Sales Counter</option>
+                                <option value="Secretary">Secretary</option>
+                                <option value="Stat">Stat</option>
+                                <option value="Stores">Stores</option>
+                                <option value="TCD">TCD</option>
+                                <option value="Tea">Tea Testing</option>
+                                <option value="Gampola"> Gampola R.office</option>
                             </select>
                         </div>
                         <div>
@@ -192,34 +242,39 @@
                     <h3>Repair History</h3>
                     <div class="input-row">
                         <div>
-                            <label for="ups-edit-repair-date-1">1st Repair Date:</label>
-                            <input type="date" name="repair_date_1" id="ups-edit-repair-date-1" />
+                            <label for="ups-edit-repair1">1st Repair Date:</label>
+                            <input type="date" name="repair_date_1" id="ups-edit-repair1" />
                         </div>
                         <div>
-                            <label for="ups-edit-repair-date-2">2nd Repair Date:</label>
-                            <input type="date" name="repair_date_2" id="ups-edit-repair-date-2" />
+                            <label for="ups-edit-repair2">2nd Repair Date:</label>
+                            <input type="date" name="repair_date_2" id="ups-edit-repair2" />
                         </div>
                     </div>
                     <div class="input-row">
                         <div>
-                            <label for="ups-edit-repair-date-3">3rd Repair Date:</label>
-                            <input type="date" name="repair_date_3" id="ups-edit-repair-date-3" />
+                            <label for="ups-edit-repair3">3rd Repair Date:</label>
+                            <input type="date" name="repair_date_3" id="ups-edit-repair3" />
                         </div>
                         <div>
-                            <label for="ups-edit-repair-date-4">4th Repair Date:</label>
-                            <input type="date" name="repair_date_4" id="ups-edit-repair-date-4" />
+                            <label for="ups-edit-repair4">4th Repair Date:</label>
+                            <input type="date" name="repair_date_4" id="ups-edit-repair4" />
                         </div>
                     </div>
-                </div>
-                <div class="form-actions">
-                    <button type="submit" class="create-btn">Save</button>
-                    <button type="button" class="cancel-btn" id="ups-cancelEdit">Cancel</button>
-                </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="create-btn">Save</button>
+                        <button type="button" class="cancel-btn" id="ups-cancelEdit">Cancel</button>
+                    </div>
             </form>
         </div>
     </div>
-    <script src="ups.js"></script>
+
     <script>
+
+        document.getElementById('upsBackBtn').addEventListener('click', () => {
+            window.location.href = 'index.html';
+        });
+
         document.getElementById('ups-createBtn').addEventListener('click', function () {
             document.getElementById('upsCreateModal').style.display = 'flex';
         });
@@ -232,5 +287,6 @@
         });
     </script>
 </body>
+<script src="ups.js"></script>
 
 </html>
