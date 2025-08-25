@@ -14,12 +14,29 @@
         <div class="filters">
             <label for="photocopy-division-filter">Division:
                 <select id="photocopy-division-filter">
+                    <option value="">Select Division</option>
                     <option value="">All</option>
                     <option value="IT">IT</option>
                     <option value="admin">admin</option>
                     <option value="Lab">Lab</option>
                     <option value="Export">Export</option>
                     <option value="Finance">Finance</option>
+                    <option value="Baduraliya">Baduraliya R\O</option>
+                    <option value="Galle">Galle R\O</option>
+                    <option value="Gov.Audit">Gov.Audit</option>
+                    <option value="Internal">Internal Audit</option>
+                    <option value="Matara">Matara R\O</option>
+                    <option value="Nuwaraeliya">Nuwaraeliya R\O</option>
+                    <option value="Procurement">Procurement</option>
+                    <option value="Promotion">Promotion</option>
+                    <option value="Rathnapura">Rathnapura R\O</option>
+                    <option value="Sales">Sales Counter</option>
+                    <option value="Secretary">Secretary</option>
+                    <option value="Stat">Stat</option>
+                    <option value="Stores">Stores</option>
+                    <option value="TCD">TCD</option>
+                    <option value="Tea">Tea Testing</option>
+                    <option value="Gampola"> Gampola R.office</option>
                 </select>
             </label>
             <label for="photocopy-year-filter">Year:
@@ -32,10 +49,10 @@
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>Brand & Model No</th>
+                        <th>Brand</th>
+                        <th>Model NO</th>
                         <th>S/N</th>
                         <th>Division</th>
-                        <th>User</th>
                         <th>PRN</th>
                         <th>Year</th>
                         <th>1st Repair Date</th>
@@ -57,31 +74,33 @@
                 <div class="form-section">
                     <h3>General Details</h3>
                     <div class="input-row">
+
                         <div>
-                            <label for="photocopy-new-no">No:</label>
-                            <input type="text" name="no" id="photocopy-new-no" disabled placeholder="Auto" />
+                            <label for="photocopy-new-brand">Brand:</label>
+                            <input type="text" name="brand" id="photocopy-new-brand" required />
                         </div>
                         <div>
-                            <label for="photocopy-new-brand-model">Brand & Model No:</label>
-                            <input type="text" name="brand_model" id="photocopy-new-brand-model" required />
+                            <label for="photocopy-new-model">Model No:</label>
+                            <input type="text" name="model" id="photocopy-new-model" required />
                         </div>
                     </div>
                     <div class="input-row">
+
+
                         <div>
                             <label for="photocopy-new-sn">S/N:</label>
                             <input type="text" name="sn" id="photocopy-new-sn" required />
                         </div>
+                    </div>
+                    <div class="input-row">
                         <div>
                             <label for="photocopy-new-prn">PRN:</label>
                             <input type="text" name="prn" id="photocopy-new-prn" />
                         </div>
-                    </div>
-                    <div class="input-row">
                         <div>
                             <label for="photocopy-new-year">Year:</label>
                             <input type="text" name="year" id="photocopy-new-year" />
                         </div>
-                        <div></div>
                     </div>
                 </div>
                 <div class="form-section">
@@ -91,17 +110,31 @@
                             <label for="photocopy-new-division">Division:</label>
                             <select name="division" id="photocopy-new-division" required>
                                 <option value="">Select Division</option>
+                                <option value="">All</option>
                                 <option value="IT">IT</option>
                                 <option value="admin">admin</option>
                                 <option value="Lab">Lab</option>
                                 <option value="Export">Export</option>
                                 <option value="Finance">Finance</option>
+                                <option value="Baduraliya">Baduraliya R\O</option>
+                                <option value="Galle">Galle R\O</option>
+                                <option value="Gov.Audit">Gov.Audit</option>
+                                <option value="Internal">Internal Audit</option>
+                                <option value="Matara">Matara R\O</option>
+                                <option value="Nuwaraeliya">Nuwaraeliya R\O</option>
+                                <option value="Procurement">Procurement</option>
+                                <option value="Promotion">Promotion</option>
+                                <option value="Rathnapura">Rathnapura R\O</option>
+                                <option value="Sales">Sales Counter</option>
+                                <option value="Secretary">Secretary</option>
+                                <option value="Stat">Stat</option>
+                                <option value="Stores">Stores</option>
+                                <option value="TCD">TCD</option>
+                                <option value="Tea">Tea Testing</option>
+                                <option value="Gampola"> Gampola R.office</option>
                             </select>
                         </div>
-                        <div>
-                            <label for="photocopy-new-user">User:</label>
-                            <input type="text" name="user" id="photocopy-new-user" />
-                        </div>
+
                     </div>
                 </div>
                 <div class="form-section">
@@ -146,26 +179,33 @@
                             <input type="text" name="no" id="photocopy-edit-no" disabled placeholder="Auto" />
                         </div>
                         <div>
-                            <label for="photocopy-edit-brand-model">Brand & Model No:</label>
-                            <input type="text" name="brand_model" id="photocopy-edit-brand-model" required />
+                            <label for="photocopy-edit-brand">Brand:</label>
+                            <input type="text" name="brand" id="photocopy-edit-brand" required />
+                        </div>
+                        <div>
+                            <label for="photocopy-edit-model">Model:</label>
+                            <input type="text" name="model" id="photocopy-edit-model" required />
                         </div>
                     </div>
                     <div class="input-row">
+                        <div>
+                            <label for="photocopy-edit-model">Model No:</label>
+                            <input type="text" name="model" id="photocopy-edit-model" required />
+                        </div>
                         <div>
                             <label for="photocopy-edit-sn">S/N:</label>
                             <input type="text" name="sn" id="photocopy-edit-sn" required readonly />
                         </div>
+                    </div>
+                    <div class="input-row">
                         <div>
                             <label for="photocopy-edit-prn">PRN:</label>
                             <input type="text" name="prn" id="photocopy-edit-prn" />
                         </div>
-                    </div>
-                    <div class="input-row">
                         <div>
                             <label for="photocopy-edit-year">Year:</label>
                             <input type="text" name="year" id="photocopy-edit-year" />
                         </div>
-                        <div></div>
                     </div>
                 </div>
                 <div class="form-section">
@@ -175,17 +215,31 @@
                             <label for="photocopy-edit-division">Division:</label>
                             <select name="division" id="photocopy-edit-division" required>
                                 <option value="">Select Division</option>
+                                <option value="">All</option>
                                 <option value="IT">IT</option>
                                 <option value="admin">admin</option>
                                 <option value="Lab">Lab</option>
                                 <option value="Export">Export</option>
                                 <option value="Finance">Finance</option>
+                                <option value="Baduraliya">Baduraliya R\O</option>
+                                <option value="Galle">Galle R\O</option>
+                                <option value="Gov.Audit">Gov.Audit</option>
+                                <option value="Internal">Internal Audit</option>
+                                <option value="Matara">Matara R\O</option>
+                                <option value="Nuwaraeliya">Nuwaraeliya R\O</option>
+                                <option value="Procurement">Procurement</option>
+                                <option value="Promotion">Promotion</option>
+                                <option value="Rathnapura">Rathnapura R\O</option>
+                                <option value="Sales">Sales Counter</option>
+                                <option value="Secretary">Secretary</option>
+                                <option value="Stat">Stat</option>
+                                <option value="Stores">Stores</option>
+                                <option value="TCD">TCD</option>
+                                <option value="Tea">Tea Testing</option>
+                                <option value="Gampola"> Gampola R.office</option>
                             </select>
                         </div>
-                        <div>
-                            <label for="photocopy-edit-user">User:</label>
-                            <input type="text" name="user" id="photocopy-edit-user" />
-                        </div>
+
                     </div>
                 </div>
                 <div class="form-section">
