@@ -209,4 +209,104 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // Initial load of data when the page loads
     loadPhotocopyData();
+
+    // Report generation function
+    async function generateReport() {
+        try {
+            // Get filtered data
+            const divisionValue = document.getElementById('photocopy-division-filter').value.trim().toLowerCase();
+            const yearValue = document.getElementById('photocopy-year-filter').value.trim();
+
+            const filteredData = allRows.filter(row => {
+                const division = (row.division || "").toLowerCase();
+                const year = (row.year || "").toString();
+
+                const matchesDivision = !divisionValue || division.includes(divisionValue);
+                const matchesYear = !yearValue || year.includes(yearValue);
+
+                return matchesDivision && matchesYear;
+            });
+
+            if (filteredData.length === 0) {
+                alert("No data available to generate report!");
+                return;
+            }
+
+            // Create PDF
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Add logo
+            const logo = new Image();
+            logo.src = 'tealogo.jpg';
+
+            // Wait for logo to load
+            await new Promise((resolve) => {
+                logo.onload = resolve;
+            });
+
+            // Add logo to PDF
+            doc.addImage(logo, 'JPEG', 10, 10, 30, 30);
+
+            // Add title
+            doc.setFontSize(20);
+            doc.text("Photocopy Report", 105, 20, { align: 'center' });
+
+            // Add date
+            doc.setFontSize(12);
+            doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 105, 30, { align: 'center' });
+
+            // Add filter information
+            doc.setFontSize(10);
+            let filterInfo = "Filters: ";
+            if (divisionValue) filterInfo += `Division: ${divisionValue}, `;
+            if (yearValue) filterInfo += `Year: ${yearValue}, `;
+            filterInfo = filterInfo.replace(/, $/, '');
+            doc.text(filterInfo, 105, 40, { align: 'center' });
+
+            // Create table data
+            const tableData = filteredData.map(row => [
+                row.id || '',
+                row.brand || '',
+                row.model || '',
+                row.sn || '',
+                row.division || '',
+                row.prn || '',
+                row.year || '',
+                formatDate(row.repair_date_1),
+                formatDate(row.repair_date_2),
+                formatDate(row.repair_date_3),
+                formatDate(row.repair_date_4)
+            ]);
+
+            // Check if autoTable is available
+            if (typeof doc.autoTable !== 'function') {
+                alert('AutoTable is not available. Please check the jsPDF AutoTable plugin.');
+                return;
+            }
+
+            // Add table
+            doc.autoTable({
+                startY: 50,
+                head: [['No', 'Brand', 'Model', 'S/N', 'Division', 'PRN', 'Year', '1st Repair', '2nd Repair', '3rd Repair', '4th Repair']],
+                body: tableData,
+                theme: 'grid',
+                styles: { fontSize: 6, cellPadding: 1 },
+                headStyles: { fillColor: [78, 84, 200] },
+                margin: { top: 50 }
+            });
+
+            // Save PDF
+            doc.save('Photocopy_Report.pdf');
+
+            alert('Report generated successfully!');
+
+        } catch (error) {
+            console.error('Error generating report:', error);
+            alert('Failed to generate report: ' + error.message);
+        }
+    }
+
+    // Add event listener for report generation button
+    document.getElementById('photocopy-generateReportBtn').addEventListener('click', generateReport);
 });
