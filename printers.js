@@ -16,9 +16,6 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-
-
-
     const tbody = document.getElementById('printers-data-body');
     const createForm = document.getElementById('printersCreateForm');
     const createModal = document.getElementById('printersCreateModal');
@@ -69,8 +66,6 @@ window.addEventListener('DOMContentLoaded', () => {
             divisionFilter.appendChild(option);
         });
     }
-
-
 
     // --- Render Table ---
     function renderTable(rows) {
@@ -270,108 +265,106 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // Initial load of data when the page loads
     loadPrintersData();
-
-    // Generate PDF report function
-    async function generateReport() {
-        try {
-            // Get the current filtered data
-            const divisionValue = document.getElementById('printers-division-filter').value.trim().toLowerCase();
-            const yearValue = document.getElementById('printers-year-filter').value.trim();
-
-            const filtered = allRows.filter(row => {
-                const divisionMatch = !divisionValue || (row.division || '').toLowerCase().includes(divisionValue);
-                const yearMatch = !yearValue || (row.year || '').toString().includes(yearValue);
-                return divisionMatch && yearMatch;
-            });
-
-            if (filtered.length === 0) {
-                alert('No data available to generate report!');
-                return;
-            }
-
-            // Create PDF document
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-
-            // Add title
-            doc.setFontSize(16);
-            doc.text('Printers Report', 14, 15);
-            doc.setFontSize(10);
-            doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 14, 22);
-
-            // Add filter information if any filters are applied
-            let filterInfo = '';
-            if (divisionValue) {
-                filterInfo += `Division: ${divisionValue} `;
-            }
-            if (yearValue) {
-                filterInfo += `Year: ${yearValue}`;
-            }
-            if (filterInfo) {
-                doc.text(`Filters: ${filterInfo}`, 14, 29);
-            }
-
-            // Prepare table data
-            const tableData = filtered.map(row => [
-                row.id || '',
-                row.brand || '',
-                row.model || '',
-                row.sn || '',
-                row.division || '',
-                row.user || '',
-                row.prn || '',
-                row.year || '',
-                row.ip_address || '',
-                formatDate(row.repair_date_1) || '',
-                formatDate(row.repair_date_2) || '',
-                formatDate(row.repair_date_3) || '',
-                formatDate(row.repair_date_4) || ''
-            ]);
-
-            // Define table columns
-            const tableColumns = [
-                { header: 'No', dataKey: 'id' },
-                { header: 'Brand', dataKey: 'brand' },
-                { header: 'Model', dataKey: 'model' },
-                { header: 'S/N', dataKey: 'sn' },
-                { header: 'Division', dataKey: 'division' },
-                { header: 'User', dataKey: 'user' },
-                { header: 'PRN', dataKey: 'prn' },
-                { header: 'Year', dataKey: 'year' },
-                { header: 'IP Address', dataKey: 'ip_address' },
-                { header: '1st Repair Date', dataKey: 'repair_date_1' },
-                { header: '2nd Repair Date', dataKey: 'repair_date_2' },
-                { header: '3rd Repair Date', dataKey: 'repair_date_3' },
-                { header: '4th Repair Date', dataKey: 'repair_date_4' }
-            ];
-
-            // Add table to PDF
-            doc.autoTable({
-                head: [tableColumns.map(col => col.header)],
-                body: tableData,
-                startY: 35,
-                styles: { fontSize: 8 },
-                headStyles: { fillColor: [66, 139, 202] },
-                alternateRowStyles: { fillColor: [240, 240, 240] },
-                margin: { top: 35 }
-            });
-
-            // Add page numbers
-            const pageCount = doc.internal.getNumberOfPages();
-            for (let i = 1; i <= pageCount; i++) {
-                doc.setPage(i);
-                doc.setFontSize(8);
-                doc.text(`Page ${i} of ${pageCount}`, doc.internal.pageSize.width / 2,
-                    doc.internal.pageSize.height - 10, { align: 'center' });
-            }
-
-            // Save the PDF
-            const fileName = `Printers_Report_${new Date().toISOString().slice(0, 10)}.pdf`;
-            doc.save(fileName);
-
-        } catch (error) {
-            console.error('Error generating report:', error);
-            alert('Failed to generate report: ' + error.message);
-        }
-    }
 });
+
+// Make generateReport function available globally
+async function generateReport() {
+    try {
+        // Get the current filtered data
+        const divisionValue = document.getElementById('printers-division-filter').value.trim().toLowerCase();
+        const yearValue = document.getElementById('printers-year-filter').value.trim();
+
+        const filteredData = allRows.filter(row => {
+            const division = (row.division || "").toLowerCase();
+            const year = (row.year || "").toString();
+
+            const matchesDivision = !divisionValue || division.includes(divisionValue);
+            const matchesYear = !yearValue || year.includes(yearValue);
+
+            return matchesDivision && matchesYear;
+        });
+
+        if (filteredData.length === 0) {
+            alert("No data available to generate report!");
+            return;
+        }
+
+        // Create PDF
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+
+        // Add logo
+        const logo = new Image();
+        logo.src = 'tealogo.jpg';
+
+        // Wait for logo to load
+        await new Promise((resolve) => {
+            logo.onload = resolve;
+        });
+
+        // Add logo to PDF
+        doc.addImage(logo, 'JPEG', 10, 10, 30, 30);
+
+        // Add title
+        doc.setFontSize(20);
+        doc.text("Printers Report", 105, 20, { align: 'center' });
+
+        // Add date
+        doc.setFontSize(12);
+        doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 105, 30, { align: 'center' });
+
+        // Add filter information
+        doc.setFontSize(10);
+        let filterInfo = "Filters: ";
+        if (divisionValue) filterInfo += `Division: ${divisionValue}, `;
+        if (yearValue) filterInfo += `Year: ${yearValue}, `;
+        filterInfo = filterInfo.replace(/, $/, '');
+        doc.text(filterInfo, 105, 40, { align: 'center' });
+
+        // Create table data
+        const tableData = filteredData.map(row => [
+            row.id || '',
+            row.brand || '',
+            row.model || '',
+            row.sn || '',
+            row.division || '',
+            row.user || '',
+            row.prn || '',
+            row.year || '',
+            row.ip_address || '',
+            formatDate(row.repair_date_1),
+            formatDate(row.repair_date_2),
+            formatDate(row.repair_date_3),
+            formatDate(row.repair_date_4)
+        ]);
+
+        // Check if autoTable is available
+        if (typeof doc.autoTable !== 'function') {
+            alert('AutoTable is not available. Please check the jsPDF AutoTable plugin.');
+            return;
+        }
+
+        // Add table
+        doc.autoTable({
+            startY: 50,
+            head: [['No', 'Brand', 'Model', 'S/N', 'Division', 'User', 'PRN', 'Year', 'IP Address', '1st Repair', '2nd Repair', '3rd Repair', '4th Repair']],
+            body: tableData,
+            theme: 'grid',
+            styles: { fontSize: 6, cellPadding: 1 },
+            headStyles: { fillColor: [78, 84, 200] },
+            margin: { top: 50 }
+        });
+
+        // Save PDF
+        doc.save('Printers_Report.pdf');
+
+        alert('Report generated successfully!');
+
+    } catch (error) {
+        console.error('Error generating report:', error);
+        alert('Failed to generate report: ' + error.message);
+    }
+}
+
+// Make generateReport function available globally
+window.generateReport = generateReport;
