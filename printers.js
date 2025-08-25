@@ -1,20 +1,22 @@
-window.addEventListener('DOMContentLoaded', () => {
+// Global variable to store printers data for report generation
+let allRows = [];
 
-    // Date formatting utility functions
-    function formatDate(dateString) {
-        if (!dateString || dateString === '') return '';
-        try {
-            const date = new Date(dateString);
-            if (isNaN(date.getTime())) return dateString;
-            return date.toLocaleDateString('en-GB', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric'
-            });
-        } catch (e) {
-            return dateString;
-        }
+function formatDate(dateString) {
+    if (!dateString || dateString === '') return '';
+    try {
+        const date = new Date(dateString);
+        if (isNaN(date.getTime())) return dateString;
+        return date.toLocaleDateString('en-GB', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        });
+    } catch (e) {
+        return dateString;
     }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
 
     const tbody = document.getElementById('printers-data-body');
     const createForm = document.getElementById('printersCreateForm');
@@ -31,8 +33,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
     const divisionFilter = document.getElementById('printers-division-filter');
     const yearFilter = document.getElementById('printers-year-filter'); // Get reference to year filter
-
-    let allRows = [];
 
     // --- Initial Data Load ---
     async function loadPrintersData() {
