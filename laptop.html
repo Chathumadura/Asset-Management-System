@@ -2,23 +2,37 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Laptop Users</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- jsPDF library for PDF generation -->
+    <meta charset="UTF-8" />
+    <title>Laptop Computer Info</title>
+    <link rel="stylesheet" href="style.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <!-- jsPDF AutoTable plugin for table generation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 </head>
 
 <body>
     <div class="container">
-        <h1>Laptop Users</h1>
-        <button id="laptopBackBtn" class="navBtn">Back</button>
-
+        <div class="header">
+            <img src="tealogo.jpg" alt="Logo" style="width: 100px; height: auto;" />
+            <h1>Laptop Computer Info</h1>
+        </div>
+        <button id="laptop">Back</button>
         <div class="filters">
-            <label for="laptop-division-filter">Division:
-                <select id="laptop-division-filter">
+            <label for="brand-filter">Brand:
+                <select id="brand-filter">
+                    <option value="">All</option>
+                    <option value="Dell">Dell</option>
+                    <option value="HP">HP</option>
+                    <option value="Acer">Acer</option>
+                    <option value="Lenovo">Lenovo</option>
+                    <option value="Centerm">Centerm</option>
+                    <option value="Assembled">Assembled</option>
+                </select>
+            </label>
+            <label for="model-filter">Model:
+                <input type="text" id="model-filter" placeholder="Enter model to filter" />
+            </label>
+            <label for="division-filter">Division:
+                <select id="division-filter">
                     <option value="">Select Division</option>
                     <option value="">All</option>
                     <option value="IT">IT</option>
@@ -44,229 +58,289 @@
                     <option value="Gampola"> Gampola R.office</option>
                 </select>
             </label>
-            <label for="laptop-year-filter">Year:
-                <input type="text" id="laptop-year-filter" placeholder="Enter year to filter" />
+            <label for="year-filter">Year:
+                <input type="text" id="year-filter" placeholder="Enter year to filter" />
             </label>
-            <button id="laptop-createBtn">Create New</button>
-            <button id="laptop-generateReportBtn">Generate Report</button>
+            <button id="createBtn">Create New</button>
+            <button id="generateReportBtn">Generate Report</button>
         </div>
-
         <div class="table-container">
             <table>
                 <thead>
                     <tr>
                         <th>No</th>
+                        <th>Brand </th>
+                        <th>Model No</th>
                         <th>S/N</th>
+                        <th>PRN</th>
                         <th>Division</th>
                         <th>User</th>
-                        <th>PRN</th>
                         <th>Year</th>
+                        <th>CPU/MONITER</th>
+                        <th>RAM Capacity</th>
+                        <th>HDD Capacity</th>
+                        <th>Processor Speed</th>
+                        <th>OS Version</th>
                         <th>1st Repair Date</th>
                         <th>2nd Repair Date</th>
                         <th>3rd Repair Date</th>
                         <th>4th Repair Date</th>
                         <th>Actions</th>
                     </tr>
-                </thead>
-                <tbody id="laptop-data-body">
-                </tbody>
+                    <thead>
+                    <tbody id="data-body">
+                    </tbody>
             </table>
         </div>
     </div>
 
-    <div id="laptopCreateModal" class="modal">
+    <div id="createModal" class="modal" style="display:none;">
         <div class="modal-content">
-            <h2>Add New Laptop User</h2>
-            <form id="laptopCreateForm">
-                <div class="input-row">
-                    <div>
-                        <label for="laptop-new-sn">S/N</label>
-                        <input type="text" id="laptop-new-sn" name="sn" required />
+            <h2>Create New Laptop Computer</h2>
+            <form id="createForm">
+                <div class="form-section">
+                    <div class="input-row">
+                        <div>
+                            <label>Brand :</label>
+                            <input type="text" name="brand" id="new-brand" required />
+                        </div>
+                        <div>
+                            <label>Model No:</label>
+                            <input type="text" name="model" id="new-model" required />
+                        </div>
+                        <div>
+                            <label>S/N:</label>
+                            <input type="text" name="sn" id="new-sn" required />
+                        </div>
+                        <div>
+                            <label>Division:</label>
+                            <select name="Division" id="new-division" required>
+                                <option value="">Select Division</option>
+                                <option value="">All</option>
+                                <option value="IT">IT</option>
+                                <option value="admin">admin</option>
+                                <option value="Lab">Lab</option>
+                                <option value="Export">Export</option>
+                                <option value="Finance">Finance</option>
+                                <option value="Baduraliya">Baduraliya R\O</option>
+                                <option value="Galle">Galle R\O</option>
+                                <option value="Gov.Audit">Gov.Audit</option>
+                                <option value="Internal">Internal Audit</option>
+                                <option value="Matara">Matara R\O</option>
+                                <option value="Nuwaraeliya">Nuwaraeliya R\O</option>
+                                <option value="Procurement">Procurement</option>
+                                <option value="Promotion">Promotion</option>
+                                <option value="Rathnapura">Rathnapura R\O</option>
+                                <option value="Sales">Sales Counter</option>
+                                <option value="Secretary">Secretary</option>
+                                <option value="Stat">Stat</option>
+                                <option value="Stores">Stores</option>
+                                <option value="TCD">TCD</option>
+                                <option value="Tea">Tea Testing</option>
+                                <option value="Gampola"> Gampola R.office</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>User:</label>
+                            <input type="text" name="User" id="new-user" />
+                        </div>
                     </div>
-                    <div>
-                        <label for="laptop-new-division">Division</label>
-                        <select id="laptop-new-division" name="division" required>
-                            <option value="">Select Division</option>
-                            <option value="">All</option>
-                            <option value="IT">IT</option>
-                            <option value="admin">admin</option>
-                            <option value="Lab">Lab</option>
-                            <option value="Export">Export</option>
-                            <option value="Finance">Finance</option>
-                            <option value="Baduraliya">Baduraliya R\O</option>
-                            <option value="Galle">Galle R\O</option>
-                            <option value="Gov.Audit">Gov.Audit</option>
-                            <option value="Internal">Internal Audit</option>
-                            <option value="Matara">Matara R\O</option>
-                            <option value="Nuwaraeliya">Nuwaraeliya R\O</option>
-                            <option value="Procurement">Procurement</option>
-                            <option value="Promotion">Promotion</option>
-                            <option value="Rathnapura">Rathnapura R\O</option>
-                            <option value="Sales">Sales Counter</option>
-                            <option value="Secretary">Secretary</option>
-                            <option value="Stat">Stat</option>
-                            <option value="Stores">Stores</option>
-                            <option value="TCD">TCD</option>
-                            <option value="Tea">Tea Testing</option>
-                            <option value="Gampola"> Gampola R.office</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="input-row">
-                    <div>
-                        <label for="laptop-new-user">User</label>
-                        <input type="text" id="laptop-new-user" name="user" />
-                    </div>
-                    <div>
-                        <label for="laptop-new-prn">PRN</label>
-                        <input type="text" id="laptop-new-prn" name="prn" />
-                    </div>
-                </div>
-                <div class="input-row">
-                    <div>
-                        <label for="laptop-new-year">Year</label>
-                        <input type="text" id="laptop-new-year" name="year" />
-                    </div>
-                    <div>
-                        <label for="laptop-new-repair_date_1">1st Repair Date</label>
-                        <input type="date" id="laptop-new-repair_date_1" name="repair_date_1" />
-                    </div>
-                </div>
-                <div class="input-row">
-                    <div>
-                        <label for="laptop-new-repair_date_2">2nd Repair Date</label>
-                        <input type="date" id="laptop-new-repair_date_2" name="repair_date_2" />
-                    </div>
-                    <div>
-                        <label for="laptop-new-repair_date_3">3rd Repair Date</label>
-                        <input type="date" id="laptop-new-repair_date_3" name="repair_date_3" />
+                    <div class="input-row">
+                        <div>
+                            <label>PRN:</label>
+                            <input type="text" name="PRN" id="new-PRN" />
+                        </div>
+                        <div>
+                            <label>Year:</label>
+                            <input type="text" name="YEAR" id="new-year" />
+                        </div>
                     </div>
                 </div>
-                <div class="input-row">
-                    <div>
-                        <label for="laptop-new-repair_date_4">4th Repair Date</label>
-                        <input type="date" id="laptop-new-repair_date_4" name="repair_date_4" />
+                <div class="form-section">
+                    <div class="input-row">
+                        <div>
+                            <label>CPU/MONITER:</label>
+                            <input type="text" name="cpu_moniter" id="new-cpu-moniter" />
+                        </div>
+                        <div>
+                            <label>RAM Capacity:</label>
+                            <input type="text" name="ram_capacity" id="new-ram-capacity" />
+                        </div>
+                        <div>
+                            <label>HDD Capacity:</label>
+                            <input type="text" name="hdd_capacity" id="new-hdd-capacity" />
+                        </div>
+                        <div>
+                            <label>Processor Speed:</label>
+                            <input type="text" name="processor_speed" id="new-processor-speed" />
+                        </div>
                     </div>
-                    <div></div>
+                    <div class="input-row">
+                        <div>
+                            <label>OS Version:</label>
+                            <input type="text" name="os_version" id="new-os-version" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-section">
+                    <div class="input-row">
+                        <div>
+                            <label>1st Repair Date:</label>
+                            <input type="date" name="repair_date_1" id="new-repair-date-1" />
+                        </div>
+                        <div>
+                            <label>2nd Repair Date:</label>
+                            <input type="date" name="repair_date_2" id="new-repair-date-2" />
+                        </div>
+                        <div>
+                            <label>3rd Repair Date:</label>
+                            <input type="date" name="repair_date_3" id="new-repair-date-3" />
+                        </div>
+                        <div>
+                            <label>4th Repair Date:</label>
+                            <input type="date" name="repair_date_4" id="new-repair-date-4" />
+                        </div>
+                    </div>
                 </div>
                 <div class="form-actions">
                     <button type="submit" class="create-btn">Create</button>
-                    <button type="button" id="laptop-cancelCreate" class="cancel-btn">Cancel</button>
+                    <button type="button" class="cancel-btn" id="cancelCreate">Cancel</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <div id="laptopEditModal" class="modal" data-id="" style="display:none;">
+    <div id="editModal" class="modal" style="display:none;">
         <div class="modal-content">
-            <h2>Edit Laptop Details</h2>
-            <form id="laptopEditForm">
-                <div class="input-row">
-                    <div>
-                        <label for="laptop-edit-sn">S/N</label>
-                        <input id="laptop-edit-sn" name="sn" type="text" />
+            <h2>Edit Laptop Computer Details</h2>
+            <form id="editForm">
+                <div class="form-section">
+                    <div class="input-row">
+                        <input type="hidden" id="edit-id" />
+                        <div>
+                            <label>Brand :</label>
+                            <input type="text" name="brand" id="edit-brand" required />
+                        </div>
+                        <div>
+                            <label>Model No:</label>
+                            <input type="text" name="model" id="edit-model" required />
+                        </div>
+                        <div>
+                            <label>S/N:</label>
+                            <input type="text" name="sn" id="edit-sn" readonly />
+                        </div>
+                        <div>
+                            <label>Division:</label>
+                            <select name="Division" id="edit-division" required>
+                                <option value="">Select Division</option>
+                                <option value="">All</option>
+                                <option value="IT">IT</option>
+                                <option value="admin">admin</option>
+                                <option value="Lab">Lab</option>
+                                <option value="Export">Export</option>
+                                <option value="Finance">Finance</option>
+                                <option value="Baduraliya">Baduraliya R\O</option>
+                                <option value="Galle">Galle R\O</option>
+                                <option value="Gov.Audit">Gov.Audit</option>
+                                <option value="Internal">Internal Audit</option>
+                                <option value="Matara">Matara R\O</option>
+                                <option value="Nuwaraeliya">Nuwaraeliya R\O</option>
+                                <option value="Procurement">Procurement</option>
+                                <option value="Promotion">Promotion</option>
+                                <option value="Rathnapura">Rathnapura R\O</option>
+                                <option value="Sales">Sales Counter</option>
+                                <option value="Secretary">Secretary</option>
+                                <option value="Stat">Stat</option>
+                                <option value="Stores">Stores</option>
+                                <option value="TCD">TCD</option>
+                                <option value="Tea">Tea Testing</option>
+                                <option value="Gampola"> Gampola R.office</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>User:</label>
+                            <input type="text" name="User" id="edit-user" />
+                        </div>
                     </div>
-                    <div>
-                        <label for="laptop-edit-division">Division</label>
-                        <select id="laptop-edit-division" name="division">
-                            <option value="">Select Division</option>
-                            <option value="">All</option>
-                            <option value="IT">IT</option>
-                            <option value="admin">admin</option>
-                            <option value="Lab">Lab</option>
-                            <option value="Export">Export</option>
-                            <option value="Finance">Finance</option>
-                            <option value="Baduraliya">Baduraliya R\O</option>
-                            <option value="Galle">Galle R\O</option>
-                            <option value="Gov.Audit">Gov.Audit</option>
-                            <option value="Internal">Internal Audit</option>
-                            <option value="Matara">Matara R\O</option>
-                            <option value="Nuwaraeliya">Nuwaraeliya R\O</option>
-                            <option value="Procurement">Procurement</option>
-                            <option value="Promotion">Promotion</option>
-                            <option value="Rathnapura">Rathnapura R\O</option>
-                            <option value="Sales">Sales Counter</option>
-                            <option value="Secretary">Secretary</option>
-                            <option value="Stat">Stat</option>
-                            <option value="Stores">Stores</option>
-                            <option value="TCD">TCD</option>
-                            <option value="Tea">Tea Testing</option>
-                            <option value="Gampola"> Gampola R.office</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="input-row">
-                    <div>
-                        <label for="laptop-edit-user">User</label>
-                        <input id="laptop-edit-user" name="user" type="text" />
-                    </div>
-                    <div>
-                        <label for="laptop-edit-prn">PRN</label>
-                        <input id="laptop-edit-prn" name="prn" type="text" />
-                    </div>
-                </div>
-                <div class="input-row">
-                    <div>
-                        <label for="laptop-edit-year">Year</label>
-                        <input id="laptop-edit-year" name="year" type="text" />
-                    </div>
-                    <div>
-                        <label for="laptop-edit-repair-date-1">1st Repair Date</label>
-                        <input id="laptop-edit-repair-date-1" name="repair_date_1" type="date" />
-                    </div>
-                </div>
-                <div class="input-row">
-                    <div>
-                        <label for="laptop-edit-repair-date-2">2nd Repair Date</label>
-                        <input id="laptop-edit-repair-date-2" name="repair_date_2" type="date" />
-                    </div>
-                    <div>
-                        <label for="laptop-edit-repair-date-3">3rd Repair Date</label>
-                        <input id="laptop-edit-repair-date-3" name="repair_date_3" type="date" />
+                    <div class="input-row">
+                        <div>
+                            <label>PRN:</label>
+                            <input type="text" name="PRN" id="edit-PRN" />
+                        </div>
+                        <div>
+                            <label>Year:</label>
+                            <input type="text" name="YEAR" id="edit-year" />
+                        </div>
                     </div>
                 </div>
-                <div class="input-row">
-                    <div>
-                        <label for="laptop-edit-repair-date-4">4th Repair Date</label>
-                        <input id="laptop-edit-repair-date-4" name="repair_date_4" type="date" />
+                <div class="form-section">
+                    <div class="input-row">
+                        <div>
+                            <label>CPU/MONITER:</label>
+                            <input type="text" name="cpu_moniter" id="edit-cpu-moniter" />
+                        </div>
+                        <div>
+                            <label>RAM Capacity:</label>
+                            <input type="text" name="ram_capacity" id="edit-ram-capacity" />
+                        </div>
+                        <div>
+                            <label>HDD Capacity:</label>
+                            <input type="text" name="hdd_capacity" id="edit-hdd-capacity" />
+                        </div>
+                        <div>
+                            <label>Processor Speed:</label>
+                            <input type="text" name="processor_speed" id="edit-processor-speed" />
+                        </div>
                     </div>
-                    <div></div>
+                    <div class="input-row">
+                        <div>
+                            <label>OS Version:</label>
+                            <input type="text" name="os_version" id="edit-os-version" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-section">
+                    <div class="input-row">
+                        <div>
+                            <label>1st Repair Date:</label>
+                            <input type="date" name="repair_date_1" id="edit-repair-date-1" />
+                        </div>
+                        <div>
+                            <label>2nd Repair Date:</label>
+                            <input type="date" name="repair_date_2" id="edit-repair-date-2" />
+                        </div>
+                        <div>
+                            <label>3rd Repair Date:</label>
+                            <input type="date" name="repair_date_3" id="edit-repair-date-3" />
+                        </div>
+                        <div>
+                            <label>4th Repair Date:</label>
+                            <input type="date" name="repair_date_4" id="edit-repair-date-4" />
+                        </div>
+                    </div>
                 </div>
                 <div class="form-actions">
                     <button type="submit" class="create-btn">Update</button>
-                    <button type="button" id="laptop-cancelEdit" class="cancel-btn">Cancel</button>
+                    <button type="button" class="cancel-btn" id="cancelEdit">Cancel</button>
                 </div>
             </form>
         </div>
     </div>
 
-
     <script src="laptop.js"></script>
+
     <script>
-        document.getElementById('laptopBackBtn').onclick = () => window.location.href = 'index.html';
+        document.getElementById('laptop').onclick = () => window.location.href = 'index.html';
 
-        // Control visibility of Create Modal
-        document.getElementById('laptop-createBtn').onclick = () => {
-            document.getElementById('laptopCreateModal').style.display = 'flex'; // Use flex for centering
-            document.getElementById('laptopCreateForm').reset(); // Clear form on open
-        };
-        document.getElementById('laptop-cancelCreate').onclick = () => {
-            document.getElementById('laptopCreateModal').style.display = 'none';
+        document.getElementById('cancelCreate').onclick = () => {
+            document.getElementById('createModal').style.display = 'none';
         };
 
-        // Control visibility of Edit Modal (added here for completeness, also in laptop.js)
-        document.getElementById('laptop-cancelEdit').onclick = () => {
-            document.getElementById('laptopEditModal').style.display = 'none';
-        };
-
-        // Generate Report button handler
-        document.getElementById('laptop-generateReportBtn').onclick = () => {
-            // This will be handled in laptop.js
-            if (typeof generateReport === 'function') {
-                generateReport();
-            }
+        document.getElementById('cancelEdit').onclick = () => {
+            document.getElementById('editModal').style.display = 'none';
         };
     </script>
+
 </body>
 
 </html>
