@@ -186,34 +186,53 @@ function deleteDesktop(id) {
 
 
 
-
-
-
-
-function getLaptopComputers() {
+function getLaptopById(id) {
     return query(`
         SELECT 
             idlaptop AS id, 
+            Brand AS brand,
+            \`Model No\` AS model,
             SN AS sn, 
-            Brand AS brand, 
-            Model AS model,
             Division AS division, 
             User AS user, 
             PRN AS prn, 
             Year AS year, 
+            \`CPU/MONITER\` AS cpu_moniter,
+            \`RAM Capacity\` AS ram_capacity,
+            \`HDD Capacity\` AS hdd_capacity,
+            \`Processor Speed\` AS processor_speed,
+            \`OS Version\` AS os_version,
+            \`1st Repair Date\` AS repair_date_1,
+            \`2nd Repair Date\` AS repair_date_2,
+            \`3rd Repair Date\` AS repair_date_3,
+            \`4th Repair Date\` AS repair_date_4
+        FROM laptop_users 
+        WHERE idlaptop = ?
+    `, [id]).then(results => results[0]); // Return the first result
+}
+
+function getLaptopUsers() {
+    return query(`
+        SELECT 
+            idlaptop AS id, 
+            Brand AS brand,
+            \`Model No\` AS model,
+            SN AS sn, 
+            Division AS division, 
+            User AS user, 
+            PRN AS prn, 
+            Year AS year, 
+            \`CPU/MONITER\` AS cpu_moniter,
+            \`RAM Capacity\` AS ram_capacity,
+            \`HDD Capacity\` AS hdd_capacity,
+            \`Processor Speed\` AS processor_speed,
+            \`OS Version\` AS os_version,
             \`1st Repair Date\` AS repair_date_1,
             \`2nd Repair Date\` AS repair_date_2,
             \`3rd Repair Date\` AS repair_date_3,
             \`4th Repair Date\` AS repair_date_4
         FROM laptop_users
     `).catch(err => {
-        console.error('Error in getLaptopComputers:', err);
-        throw err;
-    });
-}
-
-function getLaptopUsers() {
-    return query('SELECT idlaptop AS id, `SN` as sn, `Division` as division, `User` as user, `PRN` as prn, `Year` as year, `1st Repair Date` AS repair_date_1, `2nd Repair Date` AS repair_date_2, `3rd Repair Date` AS repair_date_3, `4th Repair Date` AS repair_date_4 FROM laptop_users').catch(err => {
         console.error('Error in getLaptopUsers:', err);
         throw err;
     });
@@ -224,14 +243,23 @@ function createLaptopUser(row) {
     return new Promise((resolve, reject) => {
         const cleanDate = date => (!date || date.trim() === '') ? null : date;
         const sql = `INSERT INTO laptop_users
-            (sn, division, user, prn, year, \`1st Repair Date\`, \`2nd Repair Date\`, \`3rd Repair Date\`, \`4th Repair Date\`)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+            (Brand, \`Model No\`, SN, Division, User, PRN, Year, \`CPU/MONITER\`, 
+             \`RAM Capacity\`, \`HDD Capacity\`, \`Processor Speed\`, \`OS Version\`,
+             \`1st Repair Date\`, \`2nd Repair Date\`, \`3rd Repair Date\`, \`4th Repair Date\`)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
         const params = [
+            row.brand,
+            row.model,
             row.sn,
             row.division,
             row.user,
             row.prn,
             row.year,
+            row.cpu_moniter,
+            row.ram_capacity,
+            row.hdd_capacity,
+            row.processor_speed,
+            row.os_version,
             cleanDate(row.repair_date_1),
             cleanDate(row.repair_date_2),
             cleanDate(row.repair_date_3),
@@ -249,22 +277,36 @@ function updateLaptopUser(row) {
     return new Promise((resolve, reject) => {
         const cleanDate = date => (!date || date.trim() === '') ? null : date;
         const sql = `UPDATE laptop_users SET
+            Brand = ?,
+            \`Model No\` = ?,
             SN = ?,
             Division = ?,
             User = ?,
             PRN = ?,
             Year = ?,
+            \`CPU/MONITER\` = ?,
+            \`RAM Capacity\` = ?,
+            \`HDD Capacity\` = ?,
+            \`Processor Speed\` = ?,
+            \`OS Version\` = ?,
             \`1st Repair Date\` = ?,
             \`2nd Repair Date\` = ?,
             \`3rd Repair Date\` = ?,
             \`4th Repair Date\` = ?
             WHERE idlaptop = ?`;
         const params = [
+            row.brand,
+            row.model,
             row.sn,
             row.division,
             row.user,
             row.prn,
             row.year,
+            row.cpu_moniter,
+            row.ram_capacity,
+            row.hdd_capacity,
+            row.processor_speed,
+            row.os_version,
             cleanDate(row.repair_date_1),
             cleanDate(row.repair_date_2),
             cleanDate(row.repair_date_3),
@@ -339,9 +381,6 @@ function updateScanner(row) {
     return new Promise((resolve, reject) => {
         const cleanDate = date => (!date || date.trim() === '') ? null : date;
 
-        // Check the incoming data
-        console.log('Update data:', row);
-
         const sql = `UPDATE scanner SET
             Brand = ?,
             \`Model No\` = ?,
@@ -361,8 +400,8 @@ function updateScanner(row) {
             row.model,
             row.sn,
             row.prn,
-            row.division, // Changed from row.Division
-            row.user,    // Changed from row.User
+            row.division,
+            row.user,
             row.year,
             cleanDate(row.repair_date_1),
             cleanDate(row.repair_date_2),
@@ -371,16 +410,10 @@ function updateScanner(row) {
             row.id
         ];
 
-        // Log the SQL and parameters for debugging
-        console.log('SQL:', sql);
-        console.log('Parameters:', params);
-
         connection.query(sql, params, (err, results) => {
             if (err) {
-                console.error('Update error:', err);
                 reject(err);
             } else {
-                console.log('Update results:', results);
                 resolve(results);
             }
         });
@@ -527,7 +560,7 @@ function getPrinters() {
     SELECT
         idprinters AS id,
         \`Brand\` AS brand,
-        \`Model No\` AS model_no,
+        \`Model No\` AS model,
         \`S/N\` AS sn,
         \`PRN\` AS prn,
         \`Year\` AS year,
@@ -546,6 +579,7 @@ function getPrinters() {
 }
 
 function updatePrinter(id, row) {
+    console.log('Updating printer with ID:', id, 'and data:', JSON.stringify(row));
     return new Promise((resolve, reject) => {
         const cleanDate = date => (!date || date.trim() === '') ? null : date;
         const sql = `UPDATE printers SET
@@ -565,7 +599,7 @@ function updatePrinter(id, row) {
 
         const params = [
             row.brand || row['Brand'],
-            row.model || row['Model No'],
+            row.model || row['Model No'] || row.model_no, // Added support for model_no field
             row.sn,
             row.division,
             row.user,
@@ -579,9 +613,19 @@ function updatePrinter(id, row) {
             id
         ];
 
+        console.log('SQL Parameters:', params);
+
         connection.query(sql, params, (err, results) => {
-            if (err) reject(err);
-            else resolve(results);
+            if (err) {
+                console.error('Error updating printer:', err);
+                console.error('SQL:', sql);
+                console.error('Params:', params);
+                reject(err);
+            } else {
+                console.log('Printer updated successfully:', results);
+                console.log('Affected rows:', results.affectedRows);
+                resolve(results);
+            }
         });
     });
 }
@@ -747,6 +791,7 @@ module.exports = {
     getAllDesktopBrands,
     getModelsByBrand,
     getDesktopComputers,
-    getDesktopById
+    getDesktopById,
+    getLaptopById
 
 };

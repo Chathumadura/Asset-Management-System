@@ -135,30 +135,37 @@ async function createLaptop(event) {
     }
 }
 
-function openEditModal(id) {
-    const row = allRows.find(r => r.id == id);
-    if (!row) return;
+async function openEditModal(id) {
+    try {
+        // Get the laptop data by ID from database (like desktop implementation)
+        const laptopData = await window.electronAPI.getLaptopById(id);
 
-    document.getElementById("editModal").setAttribute("data-record-id", id);
+        // Populate the edit modal with the data
+        document.getElementById("edit-id").value = laptopData.id;
+        document.getElementById("edit-brand").value = laptopData.brand || '';
+        document.getElementById("edit-model").value = laptopData.model || '';
+        document.getElementById("edit-sn").value = laptopData.sn || '';
+        document.getElementById("edit-division").value = laptopData.division || '';
+        document.getElementById("edit-user").value = laptopData.user || '';
+        document.getElementById("edit-PRN").value = laptopData.prn || '';
+        document.getElementById("edit-year").value = laptopData.year || '';
+        document.getElementById("edit-cpu-moniter").value = laptopData.cpu_moniter || '';
+        document.getElementById("edit-ram-capacity").value = laptopData.ram_capacity || '';
+        document.getElementById("edit-hdd-capacity").value = laptopData.hdd_capacity || '';
+        document.getElementById("edit-processor-speed").value = laptopData.processor_speed || '';
+        document.getElementById("edit-os-version").value = laptopData.os_version || '';
+        document.getElementById("edit-repair-date-1").value = laptopData.repair_date_1 || '';
+        document.getElementById("edit-repair-date-2").value = laptopData.repair_date_2 || '';
+        document.getElementById("edit-repair-date-3").value = laptopData.repair_date_3 || '';
+        document.getElementById("edit-repair-date-4").value = laptopData.repair_date_4 || '';
 
-    document.getElementById("edit-brand").value = row.brand || "";
-    document.getElementById("edit-model").value = row.model || "";
-    document.getElementById("edit-sn").value = row.sn || "";
-    document.getElementById("edit-division").value = row.division || "";
-    document.getElementById("edit-user").value = row.user || "";
-    document.getElementById("edit-PRN").value = row.prn || "";
-    document.getElementById("edit-year").value = row.year || "";
-    document.getElementById("edit-cpu-moniter").value = row.cpu_moniter || "";
-    document.getElementById("edit-ram-capacity").value = row.ram_capacity || "";
-    document.getElementById("edit-hdd-capacity").value = row.hdd_capacity || "";
-    document.getElementById("edit-processor-speed").value = row.processor_speed || "";
-    document.getElementById("edit-os-version").value = row.os_version || "";
-    document.getElementById("edit-repair-date-1").value = row.repair_date_1 || "";
-    document.getElementById("edit-repair-date-2").value = row.repair_date_2 || "";
-    document.getElementById("edit-repair-date-3").value = row.repair_date_3 || "";
-    document.getElementById("edit-repair-date-4").value = row.repair_date_4 || "";
+        // Show the edit modal
+        document.getElementById("editModal").style.display = "flex";
 
-    document.getElementById("editModal").style.display = "flex";
+    } catch (err) {
+        console.error("Error loading laptop data for update:", err);
+        alert("Failed to load laptop data for update: " + err.message);
+    }
 }
 
 function closeEditModal() {
@@ -166,13 +173,12 @@ function closeEditModal() {
     document.getElementById("editForm").reset();
 }
 
-document.getElementById('editForm').onsubmit = async function (e) {
-    e.preventDefault();
-    const modal = document.getElementById('editModal');
-    const id = modal.getAttribute('data-record-id');
+// Handle edit form submission (like desktop implementation)
+document.getElementById("editForm").addEventListener("submit", async function (event) {
+    event.preventDefault();
 
     const data = {
-        id: id,
+        id: document.getElementById("edit-id").value,
         brand: document.getElementById("edit-brand").value.trim(),
         model: document.getElementById("edit-model").value.trim(),
         sn: document.getElementById("edit-sn").value.trim(),
@@ -193,13 +199,12 @@ document.getElementById('editForm').onsubmit = async function (e) {
 
     try {
         await window.electronAPI.updateLaptopUser(data);
-        alert('Laptop record updated successfully!');
-        modal.style.display = 'none';
+        document.getElementById("editModal").style.display = "none";
         await loadLaptopData();
     } catch (err) {
         alert("Failed to update record: " + err.message);
     }
-};
+});
 
 async function deleteLaptop(id) {
     if (!confirm("Are you sure you want to delete this record?")) return;
@@ -314,7 +319,7 @@ async function generateReport() {
         // Add table
         doc.autoTable({
             startY: 50,
-            head: [['No', 'Brand', 'Model', 'S/N', 'PRN', 'Division', 'User', 'Year', 'CPU/Monitor', 'RAM', 'HDD', 'Processor', 'OS', '1st Repair', '2nd Repair', '3rd Repair', '4th Repair']],
+            head: [['No', 'Brand', 'Model No', 'SN', 'PRN', 'Division', 'User', 'Year', 'CPU/Monitor', 'RAM', 'HDD', 'Processor', 'OS', '1st Repair', '2nd Repair', '3rd Repair', '4th Repair']],
             body: tableData,
             theme: 'grid',
             styles: { fontSize: 6, cellPadding: 1 },

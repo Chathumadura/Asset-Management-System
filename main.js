@@ -108,12 +108,20 @@ ipcMain.handle('db-update-desktop', async (event, data) => { // Matches preload.
 
 
 // --- Laptop Users IPC Handlers ---
-// These seem correct and match your laptop.js and preload.js.
 ipcMain.handle('get-laptop-users', async () => {
     try {
         return await db.getLaptopUsers(); // Assuming db.getLaptopUsers exists
     } catch (err) {
         console.error('Error in get-laptop-users:', err);
+        throw err;
+    }
+});
+
+ipcMain.handle('get-laptop-by-id', async (event, id) => {
+    try {
+        return await db.getLaptopById(id);
+    } catch (err) {
+        console.error('Error in get-laptop-by-id:', err);
         throw err;
     }
 });
@@ -244,6 +252,16 @@ ipcMain.handle('delete-printer', async (event, id) => {
         return await db.deletePrinter(id);
     } catch (err) {
         console.error('Error in delete-printer:', err);
+        throw err;
+    }
+});
+
+// --- Printer Update Handler ---
+ipcMain.handle('update-printer', async (event, id, row) => {
+    try {
+        return await db.updatePrinter(id, row);
+    } catch (err) {
+        console.error('Error in update-printer:', err);
         throw err;
     }
 });

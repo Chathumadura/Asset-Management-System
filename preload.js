@@ -38,7 +38,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
     getPrinters: () => ipcRenderer.invoke('get-printers'),
     createPrinter: (data) => ipcRenderer.invoke('create-printer', data),
     deletePrinter: (id) => ipcRenderer.invoke('delete-printer', id),
-    updatePrinter: (data) => ipcRenderer.invoke('update-printer', data),
+    updatePrinter: (id, data) => ipcRenderer.invoke('update-printer', id, data),
 
     getPrinterByID: (id) => ipcRenderer.invoke('get-printer-by-sn', id), // Optional
 

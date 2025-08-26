@@ -13,9 +13,13 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // Function to load and render scanner data
     async function loadScannerData() {
-        const rows = await window.electronAPI.getScanners();
-        allRows = rows;
-        renderTable(rows);
+        try {
+            const rows = await window.electronAPI.getScanners();
+            allRows = rows;
+            renderTable(rows);
+        } catch (error) {
+            alert('Failed to load scanner data: ' + error.message);
+        }
     }
 
     // Function to format dates for display
@@ -84,8 +88,12 @@ window.addEventListener('DOMContentLoaded', () => {
             btn.onclick = async e => {
                 const id = btn.getAttribute('data-id');
                 if (confirm('Are you sure you want to delete this record?')) {
-                    await window.electronAPI.deleteScanner(id);
-                    loadScannerData();
+                    try {
+                        await window.electronAPI.deleteScanner(id);
+                        loadScannerData();
+                    } catch (error) {
+                        alert('Failed to delete scanner: ' + error.message);
+                    }
                 }
             };
         });
@@ -95,7 +103,11 @@ window.addEventListener('DOMContentLoaded', () => {
                 const idToEdit = btn.getAttribute('data-id');
                 const row = allRows.find(row => row.id == idToEdit);
 
-                if (!row) return;
+                if (!row) {
+                    alert('Scanner record not found!');
+                    return;
+                }
+
                 document.getElementById('scanner-edit-sn').value = row.sn || '';
                 document.getElementById('scanner-edit-brand').value = row.brand || '';
                 document.getElementById('scanner-edit-model').value = row.model || '';
