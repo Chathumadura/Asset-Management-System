@@ -103,26 +103,30 @@ window.addEventListener('DOMContentLoaded', () => {
         tbody.querySelectorAll('.edit-btn').forEach(btn => {
             btn.onclick = async e => {
                 const idToEdit = btn.getAttribute('data-id');
-                // Find the full row data from allRows using the ID
-                const photocopyToEdit = allRows.find(row => row.id === parseInt(idToEdit));
+                try {
+                    // Get the photocopy data by ID from the database
+                    const photocopyToEdit = await window.electronAPI.getPhotocopyById(idToEdit);
 
-                if (photocopyToEdit) {
-                    // Populate the edit form fields
-                    document.getElementById('photocopy-edit-no').value = photocopyToEdit.id || ''; // Auto-generated/disabled
-                    document.getElementById('photocopy-edit-brand').value = photocopyToEdit.brand || '';
-                    document.getElementById('photocopy-edit-model').value = photocopyToEdit.model || '';
-                    document.getElementById('photocopy-edit-sn').value = photocopyToEdit.sn || '';
-                    document.getElementById('photocopy-edit-division').value = photocopyToEdit.diviion || '';
+                    if (photocopyToEdit) {
+                        // Populate the edit form fields
+                        document.getElementById('photocopy-edit-no').value = photocopyToEdit.id || ''; // Auto-generated/disabled
+                        document.getElementById('photocopy-edit-brand').value = photocopyToEdit.brand || '';
+                        document.getElementById('photocopy-edit-model').value = photocopyToEdit.model || '';
+                        document.getElementById('photocopy-edit-sn').value = photocopyToEdit.sn || '';
+                        document.getElementById('photocopy-edit-division').value = photocopyToEdit.division || '';
+                        document.getElementById('photocopy-edit-prn').value = photocopyToEdit.prn || '';
+                        document.getElementById('photocopy-edit-year').value = photocopyToEdit.year || '';
+                        document.getElementById('photocopy-edit-repair-date-1').value = photocopyToEdit.repair_date_1 || '';
+                        document.getElementById('photocopy-edit-repair-date-2').value = photocopyToEdit.repair_date_2 || '';
+                        document.getElementById('photocopy-edit-repair-date-3').value = photocopyToEdit.repair_date_3 || '';
+                        document.getElementById('photocopy-edit-repair-date-4').value = photocopyToEdit.repair_date_4 || '';
 
-                    document.getElementById('photocopy-edit-prn').value = photocopyToEdit.prn || '';
-                    document.getElementById('photocopy-edit-year').value = photocopyToEdit.year || '';
-                    document.getElementById('photocopy-edit-repair-date-1').value = photocopyToEdit.repair_date_1 || '';
-                    document.getElementById('photocopy-edit-repair-date-2').value = photocopyToEdit.repair_date_2 || '';
-                    document.getElementById('photocopy-edit-repair-date-3').value = photocopyToEdit.repair_date_3 || '';
-                    document.getElementById('photocopy-edit-repair-date-4').value = photocopyToEdit.repair_date_4 || '';
-
-                    // Display the edit modal
-                    editModal.style.display = 'flex';
+                        // Display the edit modal
+                        editModal.style.display = 'flex';
+                    }
+                } catch (err) {
+                    console.error('Error loading photocopy data for edit:', err);
+                    alert('Failed to load photocopy data for editing: ' + err.message);
                 }
             };
         });
@@ -142,8 +146,8 @@ window.addEventListener('DOMContentLoaded', () => {
     createForm.onsubmit = async e => {
         e.preventDefault();
         const newRecord = {
-            'Brand ': createForm.querySelector('input[name="brand"]').value.trim(),
-            'Model No': createForm.querySelector('input[name="model"]').value.trim(),
+            brand: createForm.querySelector('input[name="brand"]').value.trim(),
+            model: createForm.querySelector('input[name="model"]').value.trim(),
             sn: createForm.querySelector('input[name="sn"]').value.trim(),
             division: createForm.querySelector('select[name="division"]').value,
             prn: createForm.querySelector('input[name="prn"]').value.trim(),
@@ -173,24 +177,24 @@ window.addEventListener('DOMContentLoaded', () => {
     // Handle Edit Form submission
     editForm.onsubmit = async e => {
         e.preventDefault();
-        const originalSn = document.getElementById('photocopy-edit-sn').value; // Get the S/N to identify the record
+        const recordId = document.getElementById('photocopy-edit-no').value; // Get the record ID
         const updatedPhotocopy = {
-            // 'No' is disabled, so we don't need to send it if it's auto-generated
-            'Brand `': document.getElementById('photocopy-edit-brand').value.trim(),
-            'Model No': document.getElementById('photocopy-edit-model').value.trim(),
-            'S/N': document.getElementById('photocopy-edit-sn').value.trim(), // Send S/N again in case it's part of the update logic
-            'Division': photocopyToEdit.division || '',
-            'PRN': document.getElementById('photocopy-edit-prn').value.trim(),
-            'Year': document.getElementById('photocopy-edit-year').value.trim(),
-            '1st Repair Date': document.getElementById('photocopy-edit-repair-date-1').value || null,
-            '2nd Repair Date': document.getElementById('photocopy-edit-repair-date-2').value || null,
-            '3rd Repair Date': document.getElementById('photocopy-edit-repair-date-3').value || null,
-            '4th Repair Date': document.getElementById('photocopy-edit-repair-date-4').value || null
+            // Use lowercase field names to match the database function expectations
+            brand: document.getElementById('photocopy-edit-brand').value.trim(),
+            model: document.getElementById('photocopy-edit-model').value.trim(),
+            sn: document.getElementById('photocopy-edit-sn').value.trim(),
+            division: document.getElementById('photocopy-edit-division').value || '',
+            prn: document.getElementById('photocopy-edit-prn').value.trim(),
+            year: document.getElementById('photocopy-edit-year').value.trim(),
+            repair_date_1: document.getElementById('photocopy-edit-repair-date-1').value || null,
+            repair_date_2: document.getElementById('photocopy-edit-repair-date-2').value || null,
+            repair_date_3: document.getElementById('photocopy-edit-repair-date-3').value || null,
+            repair_date_4: document.getElementById('photocopy-edit-repair-date-4').value || null
         };
 
         try {
-            // Assuming window.electronAPI.updatePhotocopy takes the original S/N and the updated data object
-            await window.electronAPI.updatePhotocopy(originalSn, updatedPhotocopy); // Ensure this matches your IPC call for updating photocopy data
+            // Use the record ID instead of serial number for the update
+            await window.electronAPI.updatePhotocopy(recordId, updatedPhotocopy); // Ensure this matches your IPC call for updating photocopy data
             alert('Photocopy record updated successfully!');
             editModal.style.display = 'none';
             editForm.reset();
