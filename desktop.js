@@ -62,7 +62,7 @@ function populateTable(data) {
             <td>${formatDate(row.repair_date_3)}</td>
             <td>${formatDate(row.repair_date_4)}</td>
             <td>
-                <button class="edit-btn" data-id="${row.id}">Edit</button>
+                <button class="update-btn" data-id="${row.id}">Update</button>
                 <button class="delete-btn" data-id="${row.id}">Delete</button>
             </td>
         `;
@@ -135,44 +135,58 @@ async function createDesktop(event) {
     }
 }
 
-function openEditModal(id) {
-    const row = allRows.find(r => r.id == id);
-    if (!row) return;
 
-    document.getElementById("editModal").setAttribute("data-record-id", id);
 
-    document.getElementById("edit-brand").value = row.brand || "";
-    document.getElementById("edit-model").value = row.model || "";
-    document.getElementById("edit-sn").value = row.sn || "";
-    document.getElementById("edit-division").value = row.division || "";
-    document.getElementById("edit-user").value = row.user || "";
-    document.getElementById("edit-PRN").value = row.prn || "";
-    document.getElementById("edit-year").value = row.year || "";
-    document.getElementById("edit-cpu-moniter").value = row.cpu_moniter || "";
-    document.getElementById("edit-ram-capacity").value = row.ram_capacity || "";
-    document.getElementById("edit-hdd-capacity").value = row.hdd_capacity || "";
-    document.getElementById("edit-processor-speed").value = row.processor_speed || "";
-    document.getElementById("edit-os-version").value = row.os_version || "";
-    document.getElementById("edit-repair-date-1").value = row.repair_date_1 || "";
-    document.getElementById("edit-repair-date-2").value = row.repair_date_2 || "";
-    document.getElementById("edit-repair-date-3").value = row.repair_date_3 || "";
-    document.getElementById("edit-repair-date-4").value = row.repair_date_4 || "";
+async function deleteDesktop(id) {
+    if (!confirm("Are you sure you want to delete this record?")) return;
 
-    document.getElementById("editModal").style.display = "flex";
+    try {
+        await window.electronAPI.dbDeleteDesktop(id);
+        await loadDesktopData();
+    } catch (err) {
+        alert("Failed to delete record: " + err.message);
+    }
 }
 
-function closeEditModal() {
-    document.getElementById("editModal").style.display = "none";
-    document.getElementById("editForm").reset();
+async function openUpdateModal(id) {
+    try {
+        // Get the desktop data by ID
+        const desktopData = await window.electronAPI.getDesktopById(id); // Ensure this retrieves the correct desktop data
+
+        // Populate the edit modal with the data
+        document.getElementById("edit-id").value = desktopData.id;
+        document.getElementById("edit-brand").value = desktopData.brand || '';
+        document.getElementById("edit-model").value = desktopData.model || '';
+        document.getElementById("edit-sn").value = desktopData.sn || '';
+        document.getElementById("edit-division").value = desktopData.division || '';
+        document.getElementById("edit-user").value = desktopData.user || '';
+        document.getElementById("edit-PRN").value = desktopData.prn || '';
+        document.getElementById("edit-year").value = desktopData.year || '';
+        document.getElementById("edit-cpu-moniter").value = desktopData.cpu_moniter || '';
+        document.getElementById("edit-ram-capacity").value = desktopData.ram_capacity || '';
+        document.getElementById("edit-hdd-capacity").value = desktopData.hdd_capacity || '';
+        document.getElementById("edit-processor-speed").value = desktopData.processor_speed || '';
+        document.getElementById("edit-os-version").value = desktopData.os_version || '';
+        document.getElementById("edit-repair-date-1").value = desktopData.repair_date_1 || '';
+        document.getElementById("edit-repair-date-2").value = desktopData.repair_date_2 || '';
+        document.getElementById("edit-repair-date-3").value = desktopData.repair_date_3 || '';
+        document.getElementById("edit-repair-date-4").value = desktopData.repair_date_4 || '';
+
+        // Show the edit modal
+        document.getElementById("editModal").style.display = "flex";
+
+    } catch (err) {
+        console.error("Error loading desktop data for update:", err);
+        alert("Failed to load desktop data for update: " + err.message);
+    }
 }
 
-document.getElementById('editForm').onsubmit = async function (e) {
-    e.preventDefault();
-    const modal = document.getElementById('editModal');
-    const id = modal.getAttribute('data-record-id');
+// Handle edit form submission
+document.getElementById("editForm").addEventListener("submit", async function (event) {
+    event.preventDefault();
 
     const data = {
-        id: id,
+        id: document.getElementById("edit-id").value,
         brand: document.getElementById("edit-brand").value.trim(),
         model: document.getElementById("edit-model").value.trim(),
         sn: document.getElementById("edit-sn").value.trim(),
@@ -193,33 +207,22 @@ document.getElementById('editForm').onsubmit = async function (e) {
 
     try {
         await window.electronAPI.updateDesktop(data);
-        alert('Desktop record updated successfully!');
-        modal.style.display = 'none';
+        document.getElementById("editModal").style.display = "none";
         await loadDesktopData();
     } catch (err) {
         alert("Failed to update record: " + err.message);
     }
-};
-
-async function deleteDesktop(id) {
-    if (!confirm("Are you sure you want to delete this record?")) return;
-
-    try {
-        await window.electronAPI.dbDeleteDesktop(id);
-        await loadDesktopData();
-    } catch (err) {
-        alert("Failed to delete record: " + err.message);
-    }
-}
+});
 
 document.getElementById('createBtn').onclick = openCreateModal;
 document.getElementById('createForm').onsubmit = createDesktop;
 document.getElementById('generateReportBtn').onclick = generateReport;
 
 document.getElementById("data-body").addEventListener("click", function (e) {
-    if (e.target && e.target.classList.contains("edit-btn")) {
+    if (e.target && e.target.classList.contains("update-btn")) {
         const id = e.target.getAttribute("data-id");
-        openEditModal(id);
+        console.log("Update button clicked with ID:", id);
+        openUpdateModal(id);
     } else if (e.target && e.target.classList.contains("delete-btn")) {
         const id = e.target.getAttribute("data-id");
         deleteDesktop(id);
@@ -331,4 +334,9 @@ async function generateReport() {
         console.error('Error generating report:', error);
         alert('Failed to generate report: ' + error.message);
     }
+}
+
+function closeUpdateModal() {
+    document.getElementById("editModal").style.display = "none";
+    document.getElementById("editForm").reset();
 }

@@ -103,19 +103,19 @@
                     <div class="input-row">
                         <div>
                             <label>Brand :</label>
-                            <input type="text" name="brand" id="new-brand" required />
+                            <input type="text" name="brand" id="new-brand" />
                         </div>
                         <div>
                             <label>Model No:</label>
-                            <input type="text" name="model" id="new-model" required />
+                            <input type="text" name="model" id="new-model" />
                         </div>
                         <div>
                             <label>S/N:</label>
-                            <input type="text" name="sn" id="new-sn" required />
+                            <input type="text" name="sn" id="new-sn" />
                         </div>
                         <div>
                             <label>Division:</label>
-                            <select name="Division" id="new-division" required>
+                            <select name="Division" id="new-division">
                                 <option value="">Select Division</option>
                                 <option value="">All</option>
                                 <option value="IT">IT</option>
@@ -224,19 +224,19 @@
 
                         <div>
                             <label>Brand :</label>
-                            <input type="text" name="brand" id="edit-brand" required />
+                            <input type="text" name="brand" id="edit-brand" />
                         </div>
                         <div>
                             <label>Model No:</label>
-                            <input type="text" name="model" id="edit-model" required />
+                            <input type="text" name="model" id="edit-model" />
                         </div>
                         <div>
                             <label>S/N:</label>
-                            <input type="text" name="sn" id="edit-sn" readonly />
+                            <input type="text" name="sn" id="edit-sn" />
                         </div>
                         <div>
                             <label>Division:</label>
-                            <select name="Division" id="edit-division" required>
+                            <select name="Division" id="edit-division">
                                 <option value="">Select Division</option>
                                 <option value="">All</option>
                                 <option value="IT">IT</option>
@@ -342,7 +342,7 @@
         };
 
         document.getElementById('cancelEdit').onclick = () => {
-            document.getElementById('editModal').style.display = 'none';
+            closeUpdateModal();
         };
 
         // The edit form submission is handled in desktop.js

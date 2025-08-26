@@ -38,7 +38,28 @@ function query(sql, params = []) {
 // Desktop
 
 function getDesktopById(id) {
-    return query('SELECT * FROM desktop_computer WHERE iddesktop_computer = ?', [id]);
+    return query(`
+        SELECT 
+            iddesktop_computer AS id, 
+            Brand AS brand, 
+            \`Model No\` AS model,
+            \`CPU/MONITER\` AS cpu_moniter,
+            \`S/N\` AS sn, 
+            \`Division\` AS division, 
+            \`User\` AS user, 
+            \`PRN\` AS prn, 
+            \`YEAR\` AS year, 
+            \`1st Repair Date\` AS repair_date_1,
+            \`2nd Repair Date\` AS repair_date_2,
+            \`3rd Repair Date\` AS repair_date_3,
+            \`4th Repair Date\` AS repair_date_4,
+            \`RAM Capacity\` AS ram_capacity,
+            \`HDD Capacity\` AS hdd_capacity,
+            \`Processor Speed\` AS processor_speed,
+            \`OS Version\` AS os_version
+        FROM desktop_computer 
+        WHERE iddesktop_computer = ?
+    `, [id]).then(results => results[0]); // Return the first result
 }
 function getDesktopComputers() {
     return query(`
@@ -81,7 +102,7 @@ function createDesktop(row) {
             row.model,
             row.sn,
             row.prn,
-            row.Division,
+            row.division || row.Division, // Handle both lowercase and uppercase
             row.user,
             row.year,
             row.cpu_moniter,
@@ -109,6 +130,7 @@ function updateDesktop(row) {
         const sql = `UPDATE desktop_computer SET
             \`Brand\` = ?,
             \`Model No\` = ?,
+            \`S/N\` = ?,
             \`PRN\` = ?,
             \`Division\` = ?,
             \`User\` = ?,
@@ -122,13 +144,14 @@ function updateDesktop(row) {
             \`HDD Capacity\` = ?,
             \`Processor Speed\` = ?,
             \`OS Version\` = ?
-            WHERE \`S/N\` = ?`;
+            WHERE iddesktop_computer = ?`;
 
         const params = [
             row.brand,
             row.model,
+            row.sn,
             row.prn,
-            row.Division,
+            row.division || row.Division, // Handle both lowercase and uppercase
             row.user,
             row.year,
             row.cpu_moniter,
