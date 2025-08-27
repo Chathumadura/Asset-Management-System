@@ -266,12 +266,30 @@ ipcMain.handle('update-printer', async (event, id, row) => {
     }
 });
 
+ipcMain.handle('create-photocopy', async (event, row) => {
+    try {
+        return await db.createPhotocopy(row); // Assuming db.createPhotocopy exists
+    } catch (err) {
+        console.error('Error in create-photocopy:', err);
+        throw err;
+    }
+});
+
 // --- Photocopy IPC Handlers ---
 ipcMain.handle('get-photocopy', async () => {
     try {
         return await db.getPhotocopy(); // Assuming db.getPhotocopy exists
     } catch (err) {
         console.error('Error in get-photocopy:', err);
+        throw err;
+    }
+});
+
+ipcMain.handle('get-photocopy-by-id', async (event, id) => {
+    try {
+        return await db.getPhotocopyById(id);
+    } catch (err) {
+        console.error('Error in get-photocopy-by-id:', err);
         throw err;
     }
 });

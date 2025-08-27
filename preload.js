@@ -46,6 +46,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
     getPhotocopy: () => ipcRenderer.invoke('get-photocopy'),
     createPhotocopy: (data) => ipcRenderer.invoke('create-photocopy', data),
     deletePhotocopy: (id) => ipcRenderer.invoke('delete-photocopy', id),
-    updatePhotocopy: (data) => ipcRenderer.invoke('update-photocopy', data),
-    getPhotocopyByID: (id) => ipcRenderer.invoke('get-photocopy-by-sn', id), // Optional
+    updatePhotocopy: (id, data) => ipcRenderer.invoke('update-photocopy', id, data),
+    getPhotocopyById: (id) => ipcRenderer.invoke('get-photocopy-by-id', id),
 });

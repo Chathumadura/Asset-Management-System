@@ -439,7 +439,7 @@ function createUPS(row) {
     return new Promise((resolve, reject) => {
         const cleanDate = date => (!date || date.trim() === '') ? null : date;
         const sql = `INSERT INTO ups
-            (\`Brand\`, \`Model\`, \`S/N\`, \`Division\`, \`User\`, \`PRN\`, \`Year\`,
+            (\`Brand\`, \`Model No\`, \`S/N\`, \`Division\`, \`User\`, \`PRN\`, \`Year\`,
             \`1st Repair Date\`, \`2nd Repair Date\`, \`3rd Repair Date\`, \`4th Repair Date\`)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
         const params = [
@@ -463,7 +463,7 @@ function createUPS(row) {
 }
 
 function getUPSs() {
-    return query('SELECT idups AS id, `S/N` AS sn,  Brand AS brand, `Model No` AS model, Division as division, User as user, PRN as prn, Year as year, `1st Repair Date` AS repair_date_1, `2nd Repair Date` AS repair_date_2, `3rd Repair Date` AS repair_date_3, `4th Repair Date` AS repair_date_4 FROM ups');
+    return query('SELECT idups AS id, `S/N` AS sn,  `Brand` AS brand, `Model No` AS model, `Division` as division, `User` as user, `PRN` as prn, `Year` as year, `1st Repair Date` AS repair_date_1, `2nd Repair Date` AS repair_date_2, `3rd Repair Date` AS repair_date_3, `4th Repair Date` AS repair_date_4 FROM ups');
 }
 
 
@@ -480,8 +480,8 @@ function updateUPS(id, row) {
     return new Promise((resolve, reject) => {
         const cleanDate = date => (!date || date.trim() === '') ? null : date;
         const sql = `UPDATE ups SET
-            \`Brand \` = ?,
-            \`Model No \` = ?,
+            \`Brand\` = ?,
+            \`Model No\` = ?,
             \`S/N\` = ?,
             \`Division\` = ?,
             \`User\` = ?,
@@ -696,6 +696,25 @@ function getPhotocopy() {
     });
 }
 
+function getPhotocopyById(id) {
+    return query(`
+        SELECT 
+            idphotocopy AS id,
+            Brand AS brand,
+            \`Model No\` AS model,
+            \`S/N\` AS sn,
+            Division AS division,
+            PRN AS prn,
+            Year AS year,
+            \`1st Repair Date\` AS repair_date_1,
+            \`2nd Repair Date\` AS repair_date_2,
+            \`3rd Repair Date\` AS repair_date_3,
+            \`4th Repair Date\` AS repair_date_4
+        FROM photocopy 
+        WHERE idphotocopy = ?
+    `, [id]).then(results => results[0]);
+}
+
 function updatePhotocopy(id, row) {
     return new Promise((resolve, reject) => {
         const cleanDate = date => (!date || date.trim() === '') ? null : date;
@@ -714,7 +733,6 @@ function updatePhotocopy(id, row) {
 
         const params = [
             row.brand,
-            row.model,
             row.model,
             row.sn,
             row.division,
@@ -785,6 +803,7 @@ module.exports = {
     deletePhotocopy,
     updatePhotocopy,
     getPhotocopy,
+    getPhotocopyById,
     createLaptopUser,
     deleteLaptopUser,
     updateLaptopUser,
