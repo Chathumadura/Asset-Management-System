@@ -52,20 +52,29 @@ The current application includes modules for:
 
 ```text
 Asset-Management-System/
-├── index.html
-├── main.js
-├── preload.js
-├── renderer.js
-├── db.js
-├── style.css
-├── desktop.html / desktop.js
-├── laptop.html / laptop.js
-├── scanner.html / scanner.js
-├── upspage.html / upspage.js
-├── printers.html / printers.js
-├── photocopy.html / photocopy.js
+├── src/
+│   ├── main/
+│   │   ├── main.js
+│   │   ├── preload.js
+│   │   └── db.js
+│   └── renderer/
+│       ├── index.html
+│       ├── renderer.js
+│       ├── style.css
+│       ├── tealogo.jpg
+│       ├── desktop.html / desktop.js
+│       ├── laptop.html / laptop.js
+│       ├── scanner.html / scanner.js
+│       ├── upspage.html / upspage.js
+│       ├── printers.html / printers.js
+│       └── photocopy.html / photocopy.js
+├── docs/
+│   ├── EDIT_PROGRESS.md
+│   └── TODO.md
 ├── package.json
-└── tealogo.jpg
+├── package-lock.json
+├── .gitignore
+└── README.md
 ```
 
 ## Getting Started
@@ -93,7 +102,7 @@ cd Asset-Management-System
 npm install
 ```
 
-3. Configure the MySQL connection in `db.js` for your local environment and make sure the required database tables are available.
+3. Configure the MySQL connection in `src/main/db.js` for your local environment and make sure the required database tables are available.
 
 4. Start the desktop application.
 
